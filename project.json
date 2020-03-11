@@ -1,6 +1,6 @@
 {
     "approved": false,
-    "description": "Devl0rd's Audio Visualizer",
+    "description": "Desktop audio visualizations with pets.",
     "file": "index.html",
     "general": {
         "properties": {
@@ -274,9 +274,17 @@
         "supportsaudioprocessing": true
     },
     "tags": [
-        "NoneYet"
+        "Music",
+        "Visualization",
+        "Audio",
+        "Pets",
+        "Cats",
+        "Looping",
+        "Video",
+        "Weather",
+        "Widgets"
     ],
-    "title": "BG Test",
+    "title": "Music Pets",
     "type": "web",
     "visibility": "public"
 }
