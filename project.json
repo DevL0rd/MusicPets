@@ -1,0 +1,282 @@
+{
+    "approved": false,
+    "description": "Devl0rd's Audio Visualizer",
+    "file": "index.html",
+    "general": {
+        "properties": {
+            "catSelect": {
+                "options": [
+                    {
+                        "label": "Ace",
+                        "value": "ace"
+                    },
+                    {
+                        "label": "Black",
+                        "value": "black"
+                    },
+                    {
+                        "label": "Calico",
+                        "value": "calico"
+                    },
+                    {
+                        "label": "Fancy",
+                        "value": "fancy"
+                    },
+                    {
+                        "label": "Gray",
+                        "value": "gray"
+                    },
+                    {
+                        "label": "Jess",
+                        "value": "jess"
+                    },
+                    {
+                        "label": "Kina",
+                        "value": "kina"
+                    },
+                    {
+                        "label": "Kuramecha",
+                        "value": "kuramecha"
+                    },
+                    {
+                        "label": "Marmalade",
+                        "value": "marmalade"
+                    },
+                    {
+                        "label": "Mike",
+                        "value": "mike"
+                    },
+                    {
+                        "label": "Orange",
+                        "value": "orange"
+                    },
+                    {
+                        "label": "Peach",
+                        "value": "peach"
+                    },
+                    {
+                        "label": "Rabbit",
+                        "value": "rabbit"
+                    },
+                    {
+                        "label": "Snow",
+                        "value": "snow"
+                    },
+                    {
+                        "label": "Socks",
+                        "value": "socks"
+                    },
+                    {
+                        "label": "White",
+                        "value": "white"
+                    }
+                ],
+                "order": 0,
+                "text": "Neko",
+                "type": "combo",
+                "value": "white"
+            },
+            "vidSource": {
+                "order": 1,
+                "text": "Background Video (webm)",
+                "type": "file",
+                "value": "./vid/bg.webm"
+            },
+            "blur": {
+                "max": 100,
+                "min": 0,
+                "order": 2,
+                "text": "Blur",
+                "type": "slider",
+                "value": 0
+            },
+            "vignette": {
+                "max": 100,
+                "min": 0,
+                "order": 3,
+                "text": "Vignette",
+                "type": "slider",
+                "value": 0
+            },
+            "contrast": {
+                "max": 300,
+                "min": 0,
+                "order": 4,
+                "text": "Contrast",
+                "type": "slider",
+                "value": 100
+            },
+            "brightness": {
+                "max": 300,
+                "min": 0,
+                "order": 5,
+                "text": "Brightness",
+                "type": "slider",
+                "value": 100
+            },
+            "saturation": {
+                "max": 300,
+                "min": 0,
+                "order": 6,
+                "text": "Saturation",
+                "type": "slider",
+                "value": 100
+            },
+            "grayscale": {
+                "max": 100,
+                "min": 0,
+                "order": 7,
+                "text": "Grayscale",
+                "type": "slider",
+                "value": 0
+            },
+            "sepia": {
+                "max": 100,
+                "min": 0,
+                "order": 8,
+                "text": "Sepia",
+                "type": "slider",
+                "value": 0
+            },
+            "huerotation": {
+                "max": 365,
+                "min": 0,
+                "order": 9,
+                "text": "Hue Rotation",
+                "type": "slider",
+                "value": 0
+            },
+            "invert": {
+                "max": 100,
+                "min": 0,
+                "order": 10,
+                "text": "Invert Colors",
+                "type": "slider",
+                "value": 0
+            },
+            "accentcolor": {
+                "order": 11,
+                "text": "Accents color",
+                "type": "color",
+                "value": "0 1 1"
+            },
+            "chartColor": {
+                "order": 12,
+                "text": "Chart Color",
+                "type": "color",
+                "value": "1 1 1"
+            },
+            "soundVis": {
+                "order": 13,
+                "text": "Enable Visualizer",
+                "type": "bool",
+                "value": true
+            },
+            "visRainbow": {
+                "condition": "soundVis.value",
+                "order": 14,
+                "text": "Rainbbow Vis",
+                "type": "bool",
+                "value": false
+            },
+            "visColor": {
+                "condition": "soundVis.value && !visRainbow.value",
+                "order": 15,
+                "text": "Visualizer Color",
+                "type": "color",
+                "value": "1 1 1"
+            },
+            "mirroredMode": {
+                "condition": "soundVis.value",
+                "order": 16,
+                "text": "LR Mirror Mode",
+                "type": "bool",
+                "value": false
+            },
+            "soundReaction": {
+                "order": 17,
+                "text": "Sound Reaction",
+                "type": "bool",
+                "value": true
+            },
+            "soundSamplePoint": {
+                "condition": "soundReaction.value",
+                "max": 63,
+                "min": 1,
+                "order": 18,
+                "text": "Sound Sample Point",
+                "type": "slider",
+                "value": 5
+            },
+            "tween": {
+                "condition": "soundReaction.value",
+                "max": 100,
+                "min": 0,
+                "order": 19,
+                "text": "Tweening",
+                "type": "slider",
+                "value": 70
+            },
+            "reactionLowPass": {
+                "condition": "soundReaction.value",
+                "max": 100,
+                "min": 0,
+                "order": 20,
+                "text": "Reaction Low Pass",
+                "type": "slider",
+                "value": 25
+            },
+            "autoGrayscale": {
+                "condition": "soundReaction.value",
+                "order": 21,
+                "text": "Automate Grayscale",
+                "type": "bool",
+                "value": false
+            },
+            "autoSepia": {
+                "condition": "soundReaction.value",
+                "order": 22,
+                "text": "Automate Sepia",
+                "type": "bool",
+                "value": false
+            },
+            "autoBlur": {
+                "condition": "soundReaction.value",
+                "order": 23,
+                "text": "Automate Blur",
+                "type": "bool",
+                "value": false
+            },
+            "autoHueRotate": {
+                "condition": "soundReaction.value",
+                "order": 24,
+                "text": "Automate Hue Rotation",
+                "type": "bool",
+                "value": false
+            },
+            "weather": {
+                "options": [
+                    {
+                        "label": "Auto",
+                        "value": "auto"
+                    },
+                    {
+                        "label": "Rain",
+                        "value": "rain"
+                    }
+                ],
+                "order": 25,
+                "text": "Weather Integration (WIP)",
+                "type": "combo",
+                "value": "auto"
+            }
+        },
+        "supportsaudioprocessing": true
+    },
+    "tags": [
+        "NoneYet"
+    ],
+    "title": "BG Test",
+    "type": "web",
+    "visibility": "public"
+}

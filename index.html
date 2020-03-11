@@ -1,0 +1,91 @@
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/clock.css">
+    <link rel="stylesheet" href="css/charts.css">
+    <link rel="stylesheet" href="css/audioVisualizer.css">
+    <link rel="stylesheet" href="css/rain.css">
+</head>
+
+<body>
+    <content>
+        <div class="background-movement">
+            <div class="background-scale">
+                <div id="invert">
+                    <div id="grayscale">
+                        <div id="sepia">
+                            <div id="brightness">
+                                <div id="contrast">
+                                    <div id="saturation">
+                                        <div id="huerotation">
+                                            <div id="blur">
+                                                <video id="background-canvas" src="./vid/bg.webm" class="background"
+                                                    autoplay loop>
+                                                </video>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="vignette"></div>
+            </div>
+        </div>
+        <div class="main-movement">
+            <div class="main-scale">
+                <canvas id="main-canvas" class="background"></canvas>
+            </div>
+        </div>
+    </content>
+    <div id="audioVisualizer">
+        <canvas id="audioCanvas"></canvas>
+    </div>
+    <div class="rain front-row"></div>
+    <div class="rain back-row"></div>
+    <div id="widgets">
+        <div class="widget">
+            <div class="clock">
+                <div class="hour"></div>
+                <div class="minute"></div>
+                <div class="second"></div>
+                <div class="center"></div>
+                <div class="clockText"></div>
+            </div>
+        </div>
+        <div class="widget">
+            <div class="chartpanel">
+                <span class="chartTitle" id="pingTitle">Ping</span>
+                <div class="chart">
+                    <canvas id="pingChart" class="chartCanvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="debug"></div>
+</body>
+<!-- <script src="js/fontawesome-all.min.js"></script> -->
+<script>
+    var paused = false;
+    var NekoType = "white";
+    if (localStorage.NekoType) {
+        NekoType = localStorage.NekoType
+    } else {
+        localStorage.NekoType = NekoType;
+    }
+    var delay = 100
+    var spawnDelay = 300
+</script>
+<script src="js/Chart.min.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/clock.js"></script>
+<script src="js/audioVisualizer.js"></script>
+<script src="js/NekoRemastered.js"></script>
+<script src="js/rain.js"></script>
+<script src="js/main.js"></script>
+
+</html>

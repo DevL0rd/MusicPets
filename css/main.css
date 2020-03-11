@@ -1,0 +1,64 @@
+body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    background-size: cover;
+    background-position: center top;
+    width: 100%;
+    height: 100%;
+}
+
+.background-movement {
+    position: relative;
+}
+
+content {
+    position: absolute;
+}
+
+#background-canvas,
+#background-canvas-blur,
+#front-canvas {
+    position: absolute;
+}
+
+.background {
+    width: 100vw !important;
+    height: 100vh !important;
+    background-size: cover;
+    background-position: 0% 100%;
+}
+
+#main-canvas,
+#grid-canvas {
+    position: absolute;
+    pointer-events: none;
+    user-select: none;
+}
+#widgets {
+    padding: 5px;
+    position:absolute;
+    top: 0px;
+    right: 0px;
+    color: white;
+    height: 100%;
+}
+.widget{
+    padding-bottom: 8px;
+    width: 100%;
+}
+#debug{
+    position:absolute;
+    top: 5px;
+    right: 5px;
+    color: white;
+}
+#vignette {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0 200px rgba(0,0,0,0) inset;
+  }
