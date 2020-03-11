@@ -43,6 +43,10 @@ function react(soundData) {
         $("#background-canvas").css({
             "transform": "scale(" + (1 + (averagedScale / bgReactionStrength)) + ")"
         })
+        //HW Accelerated
+        // $("#background-canvas").css({
+        //     "-webkit-transform": "translate3d(0, 0, " + (1 + (averagedScale / bgReactionStrength)) + ")"
+        // })
         if (autoGrayscale) {
             $("#grayscale").css({
                 "filter": "grayscale(" + (averagedScale) + ")"
