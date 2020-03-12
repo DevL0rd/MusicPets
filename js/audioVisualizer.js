@@ -37,16 +37,11 @@ function renderVis() {
 }
 function react(soundData) {
     var averagedScale = (soundData[soundSamplePoint - 1] + soundData[soundSamplePoint] + soundData[soundSamplePoint + 1]) / 3
-
     if ((averagedScale * 100) > reactionLowPass) { //get reactions only in this range
         averagedScale -= reactionLowPass / 100;
         $("#background-canvas").css({
             "transform": "scale(" + (1 + (averagedScale / bgReactionStrength)) + ")"
         })
-        //HW Accelerated
-        // $("#background-canvas").css({
-        //     "-webkit-transform": "translate3d(0, 0, " + (1 + (averagedScale / bgReactionStrength)) + ")"
-        // })
         if (autoGrayscale) {
             $("#grayscale").css({
                 "filter": "grayscale(" + (averagedScale) + ")"

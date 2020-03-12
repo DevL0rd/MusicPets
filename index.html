@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <content>
+    <div id="content">
         <div class="background-movement forceGPU">
             <div class="background-scale forceGPU">
                 <div id="invert" class="forceGPU">
@@ -41,32 +41,32 @@
                 <canvas id="main-canvas" class="background"></canvas>
             </div>
         </div>
-    </content>
-    <div id="audioVisualizer">
-        <canvas id="audioCanvas"></canvas>
-    </div>
-    <div class="rain front-row"></div>
-    <div class="rain back-row"></div>
-    <div id="widgets">
-        <div class="widget">
-            <div class="clock">
-                <div class="hour"></div>
-                <div class="minute"></div>
-                <div class="second"></div>
-                <div class="center"></div>
-                <div class="clockText"></div>
-            </div>
+        <div id="audioVisualizer">
+            <canvas id="audioCanvas"></canvas>
         </div>
-        <div class="widget">
-            <div class="chartpanel">
-                <span class="chartTitle" id="pingTitle">Ping</span>
-                <div class="chart">
-                    <canvas id="pingChart" class="chartCanvas"></canvas>
+        <div class="rain front-row"></div>
+        <div class="rain back-row"></div>
+        <div id="widgets">
+            <div class="widget">
+                <div class="clock">
+                    <div class="hour"></div>
+                    <div class="minute"></div>
+                    <div class="second"></div>
+                    <div class="center"></div>
+                    <div class="clockText"></div>
+                </div>
+            </div>
+            <div class="widget">
+                <div class="chartpanel">
+                    <span class="chartTitle" id="pingTitle">Ping</span>
+                    <div class="chart">
+                        <canvas id="pingChart" class="chartCanvas"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
+        <div id="debug"></div>
     </div>
-    <div id="debug"></div>
 </body>
 <!-- <script src="js/fontawesome-all.min.js"></script> -->
 <script>

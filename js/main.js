@@ -1,4 +1,5 @@
 var background;
+var vidSource = "./vid/bg.webm";
 $(document).ready(function () {
     // Set to own resolution first -- will get overriden by settings
     $("#main-canvas, #background-canvas").attr({
@@ -16,8 +17,10 @@ window.wallpaperPropertyListener = {
     setPaused: function (isPaused) {
         paused = isPaused;
         if (paused) {
-            $("#background-canvas").stop();
+            $("#content").hide(); //unload dom when not in view for performance when monitor changes resolution
+            $("#background-canvas").trigger('pause');
         } else {
+            $("#content").show(); //reload dom
             testPing(); //start the ping loop
             updateClock(); //start clock loop
             renderVis();
@@ -25,7 +28,7 @@ window.wallpaperPropertyListener = {
                 rainbowLoop();
             }
             try {
-                $("#background-canvas").play();
+                $('#background-canvas').trigger('play');
             } catch (error) {
 
             }
@@ -254,7 +257,8 @@ window.wallpaperPropertyListener = {
 
         if (properties.vidSource) {
             if (properties.vidSource.value) {
-                $("#background-canvas").src(properties.vidSource.value);
+                vidSource = properties.vidSource.value;
+                $("#background-canvas").attr('src', vidSource);
             }
         }
         if (properties.catSelect) {

@@ -13,10 +13,6 @@ body {
     position: relative;
 }
 
-content {
-    position: absolute;
-}
-
 #background-canvas,
 #background-canvas-blur,
 #front-canvas {
