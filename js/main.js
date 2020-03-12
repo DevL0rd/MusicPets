@@ -16,10 +16,10 @@ window.wallpaperPropertyListener = {
     setPaused: function (isPaused) {
         paused = isPaused;
         if (paused) {
-            $("#content").hide(); //unload dom when not in view for performance when monitor changes resolution
+            //$("#content").hide(); //unload dom when not in view for performance when monitor changes resolution
             $("#background-canvas").trigger('pause');
         } else {
-            $("#content").show(); //reload dom
+            //$("#content").show(); //reload dom
             testPing(); //start the ping loop
             updateClock(); //start clock loop
             renderVis();
