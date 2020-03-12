@@ -10,7 +10,6 @@ $(document).ready(function () {
     testPing(); //start the ping loop
     updateClock(); //start clock loop
     renderVis();
-    addNeko(false);
 });
 // Read changes made by users
 window.wallpaperPropertyListener = {
