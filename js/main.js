@@ -1,15 +1,15 @@
 var background;
 var vidSource = "./vid/bg.webm";
+var bgCanvas = document.getElementById('background-canvas');
+var bgCtx = bgCanvas.getContext('2d');
+var video = document.getElementById('video');
 $(document).ready(function () {
-    // Set to own resolution first -- will get overriden by settings
-    $("#main-canvas, #background-canvas").attr({
-        width: window.width,
-        height: window.height
-    });
     window.wallpaperRegisterAudioListener(audioListener);
     testPing(); //start the ping loop
     updateClock(); //start clock loop
-    renderVis();
+    bgCanvas.width = window.innerWidth; //set render width and height
+    bgCanvas.height = window.innerHeight; //different from canvas width and height
+    render();
 });
 // Read changes made by users
 window.wallpaperPropertyListener = {
@@ -22,7 +22,7 @@ window.wallpaperPropertyListener = {
             //$("#content").show(); //reload dom
             testPing(); //start the ping loop
             updateClock(); //start clock loop
-            renderVis();
+            render();
             if (visRainbow) {
                 rainbowLoop();
             }
@@ -34,9 +34,9 @@ window.wallpaperPropertyListener = {
         }
     },
     applyGeneralProperties: function (properties) {
-        // if (properties.fps) {
-        //     visualizer.setFPS(properties.fps);
-        // }
+        if (properties.fps) {
+            settings.fps = properties.fps;
+        }
     },
     applyUserProperties: function (properties) {
         if (properties.perf_enableFPS) {
@@ -297,5 +297,30 @@ window.wallpaperPropertyListener = {
                 }
             }
         }
+    }
+}
+
+var last = performance.now() / 1000;
+var fpsThreshold = 0;
+function render() {
+    if (!paused) {
+        // Keep animating
+        window.requestAnimationFrame(render);
+        // Figure out how much time passed since the last animation
+        var now = performance.now() / 1000;
+        var dt = Math.min(now - last, 1);
+        last = now;
+        // If there is an FPS limit, abort updating the animation if we reached the desired FPS
+        if (settings.fps > 0) {
+            fpsThreshold += dt;
+            if (fpsThreshold < 1.0 / settings.fps) {
+                return;
+            }
+            fpsThreshold -= 1.0 / settings.fps;
+        }
+        //animations
+        bgCtx.drawImage(video, 0, 0, bgCanvas.width, bgCanvas.height);
+        //render sound stuff
+        visualize();
     }
 }

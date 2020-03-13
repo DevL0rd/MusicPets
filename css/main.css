@@ -9,29 +9,19 @@ body {
     height: 100%;
 }
 
-.background-movement {
-    position: relative;
-}
-
-#background-canvas,
-#background-canvas-blur,
-#front-canvas {
+#video {
     position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
 .background {
-    width: 100vw !important;
-    height: 100vh !important;
+    width: 100%;
+    height: 100%;
     background-size: cover;
     background-position: 0% 100%;
 }
 
-#main-canvas,
-#grid-canvas {
-    position: absolute;
-    pointer-events: none;
-    user-select: none;
-}
 #widgets {
     padding: 5px;
     position:absolute;

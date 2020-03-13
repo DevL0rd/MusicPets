@@ -12,35 +12,26 @@
 
 <body>
     <div id="content">
-        <div class="background-movement forceGPU">
-            <div class="background-scale forceGPU">
-                <div id="invert" class="forceGPU">
-                    <div id="grayscale" class="forceGPU">
-                        <div id="sepia" class="forceGPU">
-                            <div id="brightness" class="forceGPU">
-                                <div id="contrast" class="forceGPU">
-                                    <div id="saturation" class="forceGPU">
-                                        <div id="huerotation" class="forceGPU">
-                                            <div id="blur" class="forceGPU">
-                                                <video id="background-canvas" src="./vid/bg.webm"
-                                                    class="background forceGPU" autoplay loop>
-                                                </video>
-                                            </div>
-                                        </div>
+        <video id="video" width=0 height=0 src="./vid/bg.webm" class="forceGPU" autoplay loop>
+        </video>
+        <div id="invert" class="forceGPU">
+            <div id="grayscale" class="forceGPU">
+                <div id="sepia" class="forceGPU">
+                    <div id="brightness" class="forceGPU">
+                        <div id="contrast" class="forceGPU">
+                            <div id="saturation" class="forceGPU">
+                                <div id="huerotation" class="forceGPU">
+                                    <div id="blur" class="forceGPU">
+                                        <canvas id="background-canvas" class="background forceGPU"></canvas>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div id="vignette"></div>
             </div>
         </div>
-        <div class="main-movement">
-            <div class="main-scale">
-                <canvas id="main-canvas" class="background"></canvas>
-            </div>
-        </div>
+        <div id="vignette"></div>
         <div id="audioVisualizer">
             <canvas id="audioCanvas"></canvas>
         </div>
@@ -71,6 +62,9 @@
 <!-- <script src="js/fontawesome-all.min.js"></script> -->
 <script>
     var paused = false;
+    var settings = {
+        fps: 60
+    };
     var NekoType = "white";
     if (localStorage.NekoType) {
         NekoType = localStorage.NekoType

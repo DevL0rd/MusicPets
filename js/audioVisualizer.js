@@ -25,15 +25,12 @@ function audioListener(soundData) {
         soundDataCache = processAudioData(soundData);
     }
 }
-function renderVis() {
-    if (!paused) {
-        soundDataCache = tweenData(soundDataCache);
-        updateGraph(soundDataCache);
-        if (soundReaction) {
-            react(soundDataCache);
-        }
+function visualize() {
+    soundDataCache = tweenData(soundDataCache);
+    updateGraph(soundDataCache);
+    if (soundReaction) {
+        react(soundDataCache);
     }
-    requestAnimationFrame(renderVis);
 }
 function react(soundData) {
     var averagedScale = (soundData[soundSamplePoint - 1] + soundData[soundSamplePoint] + soundData[soundSamplePoint + 1]) / 3
