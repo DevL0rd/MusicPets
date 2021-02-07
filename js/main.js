@@ -197,11 +197,6 @@ window.wallpaperPropertyListener = {
                 audioChart.update(0);
             }
         }
-        if (properties.soundSamplePoint) {
-            if (properties.soundSamplePoint.value) {
-                soundSamplePoint = properties.soundSamplePoint.value;
-            }
-        }
         if (properties.soundReaction) {
             soundReaction = properties.soundReaction.value;
             if (!soundReaction) {

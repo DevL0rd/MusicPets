@@ -199,15 +199,6 @@
                 "type": "bool",
                 "value": true
             },
-            "soundSamplePoint": {
-                "condition": "soundReaction.value",
-                "max": 63,
-                "min": 1,
-                "order": 18,
-                "text": "Sound Sample Point",
-                "type": "slider",
-                "value": 5
-            },
             "tween": {
                 "condition": "soundReaction.value",
                 "max": 100,

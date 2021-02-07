@@ -1,7 +1,6 @@
 var bgReactionStrength = 15;
 var soundReaction = true;
 var visRainbow = false;
-var soundSamplePoint = 10;
 var soundDataCache = [];
 var autoGrayscale = false;
 var autoBlur = false;
@@ -33,7 +32,6 @@ function visualize() {
     }
 }
 function react(soundData) {
-    // var averagedScale = (soundData[soundSamplePoint - 1] + soundData[soundSamplePoint] + soundData[soundSamplePoint + 1]) / 3
     var total = 0;
     for(var i = 1 in soundData) {
         total += soundData[i];
