@@ -215,7 +215,7 @@
                 "order": 20,
                 "text": "Reaction Low Pass",
                 "type": "slider",
-                "value": 25
+                "value": 15
             },
             "autoGrayscale": {
                 "condition": "soundReaction.value",
