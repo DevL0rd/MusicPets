@@ -16,7 +16,7 @@ function audioListener(soundData) {
     //128 data points in this
     // $("#testOut").html(soundData[0])
     if (!paused) {
-        soundData = correctWithPinkNoiseResults(soundData);
+        // soundData = correctWithPinkNoiseResults(soundData);
         if (mirroredMode) {
             soundData = mirrorChannels(soundData);
         } else {
@@ -26,16 +26,26 @@ function audioListener(soundData) {
     }
 }
 function visualize() {
-    soundDataCache = tweenData(soundDataCache);
-    updateGraph(soundDataCache);
+    var audioDats = tweenData(soundDataCache);
+    updateGraph(audioDats);
     if (soundReaction) {
-        react(soundDataCache);
+        react(audioDats);
     }
 }
 function react(soundData) {
-    var averagedScale = (soundData[soundSamplePoint - 1] + soundData[soundSamplePoint] + soundData[soundSamplePoint + 1]) / 3
-    if ((averagedScale * 100) > reactionLowPass) { //get reactions only in this range
-        averagedScale -= reactionLowPass / 100;
+    // var averagedScale = (soundData[soundSamplePoint - 1] + soundData[soundSamplePoint] + soundData[soundSamplePoint + 1]) / 3
+    var total = 0;
+    for(var i = 1 in soundData) {
+        total += soundData[i];
+        // console.log("i: " + i)
+        // console.log(soundData[i])
+    }
+    // console.log("---end---")
+    var lowPass = reactionLowPass / 100;
+    var averagedScale = (total / soundData.length) * 2;
+    console.log(averagedScale+"-"+lowPass)
+    if (averagedScale > lowPass) { //get reactions only in this range
+        averagedScale -= lowPass
         $("#background-canvas").css({
             "transform": "scale(" + (1 + (averagedScale / bgReactionStrength)) + ")"
         })
@@ -96,8 +106,9 @@ function mirrorChannels(soundData) {
 }
 function mergeChannels(soundData) {
     var newData = [];
-    for (i in soundData) {
-        newData.push((soundData[i] + soundData[parseInt(i) + 64]) / 2);
+    var half_length = Math.ceil(soundData.length / 2);
+    for (var i = 0; i < half_length; i++) {
+        newData.push((soundData[i] + soundData[i + half_length]) / 2);
     }
     return newData;
 }
@@ -149,7 +160,7 @@ function normlizeWaveform(soundData) {
     // adjust ratio to how fast or slow you want normalization to react volume changes
     peakValue = peakValue * normFloat + max * normFlip;
     // normalize value
-    for (i = 0; i < 128; i++) {
+    for (i = 0; i < soundData.length; i++) {
         soundData[i] /= peakValue;
     }
     return soundData;

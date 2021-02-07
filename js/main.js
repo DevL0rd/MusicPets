@@ -1,8 +1,9 @@
 var background;
-var vidSource = "./vid/bg.webm";
 var bgCanvas = document.getElementById('background-canvas');
 var bgCtx = bgCanvas.getContext('2d');
 var video = document.getElementById('video');
+var image = document.getElementById('image');
+var isVideo = false;
 $(document).ready(function () {
     window.wallpaperRegisterAudioListener(audioListener);
     testPing(); //start the ping loop
@@ -254,10 +255,17 @@ window.wallpaperPropertyListener = {
             };
         }
 
-        if (properties.vidSource) {
-            if (properties.vidSource.value) {
-                vidSource = properties.vidSource.value;
-                $("#background-canvas").attr('src', vidSource);
+        if (properties.bgSource) {
+            if (properties.bgSource.value) {
+                var bgSource = "file:///" + properties.bgSource.value;
+                if (bgSource.toLowerCase().includes(".webm")) {
+                    isVideo = true;
+                    $("#video").attr("src", bgSource)
+                } else {
+                    isVideo = false;
+                    $("#image").attr("src", bgSource)
+                    
+                }
             }
         }
         if (properties.catSelect) {
@@ -319,7 +327,11 @@ function render() {
             fpsThreshold -= 1.0 / settings.fps;
         }
         //animations
-        bgCtx.drawImage(video, 0, 0, bgCanvas.width, bgCanvas.height);
+        if (isVideo) {
+            bgCtx.drawImage(video, 0, 0, bgCanvas.width, bgCanvas.height);
+        } else {
+            bgCtx.drawImage(image, 0, 0, bgCanvas.width, bgCanvas.height);
+        }
         //render sound stuff
         visualize();
     }

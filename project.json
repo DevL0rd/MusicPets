@@ -76,11 +76,11 @@
                 "type": "combo",
                 "value": "white"
             },
-            "vidSource": {
+            "bgSource": {
                 "order": 1,
-                "text": "Background Video (webm)",
+                "text": "Background (vid/img)",
                 "type": "file",
-                "value": "./vid/bg.webm"
+                "value": "./img/bg.jpg"
             },
             "blur": {
                 "max": 100,
