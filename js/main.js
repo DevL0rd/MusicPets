@@ -294,7 +294,7 @@ window.wallpaperPropertyListener = {
         if (properties.weather) {
             if (properties.weather.value) {
                 if (properties.weather.value == "auto") {
-
+                    stopRain();
                 } else if (properties.weather.value == "rain") {
                     makeItRain();
                 }
