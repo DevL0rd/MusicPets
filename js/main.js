@@ -266,7 +266,7 @@ window.wallpaperPropertyListener = {
             if (properties.catSelect.value) {
                 NekoType = properties.catSelect.value
                 localStorage.NekoType = NekoType;
-                addNeko(false);
+                addNeko(true);
             }
         }
         if (properties.reactionLowPass) {
