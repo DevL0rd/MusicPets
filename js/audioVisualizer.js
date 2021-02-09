@@ -33,16 +33,30 @@ function visualize() {
 }
 function react(soundData) {
     var total = 0;
-    for(var i = 1 in soundData) {
-        total += soundData[i];
-        // console.log("i: " + i)
-        // console.log(soundData[i])
+    if (mirroredMode) {
+        soundData = mergeChannels(soundData);
     }
+    var averagedScale = 0;
+    if (mirroredMode) {
+        var half_length = Math.floor(soundData.length / 2);
+        for (var i = 1; i < half_length; i++) {
+            total += soundData[i] * (half_length - i) / half_length; //Give base more weight from 1, to trebel of 0
+        }
+        for (var i = soundData.length - 1; i >= half_length; i--) {
+            total += soundData[i] * (i - half_length) / half_length; //Give base more weight from 1, to trebel of 0
+        }
+    } else {
+        for (var i = 1; i < soundData.length; i++) {
+            total += soundData[i] * (soundData.length - i) / soundData.length; //Give base more weight from 1, to trebel of 0
+        }
+    }
+    averagedScale = (total / soundData.length) * 2;
+    
     // console.log("---end---")
     var lowPass = reactionLowPass / 100;
-    var averagedScale = (total / soundData.length) * 2;
-    console.log(averagedScale+"-"+lowPass)
+    // console.log(averagedScale+"-"+lowPass)
     if (averagedScale > lowPass) { //get reactions only in this range
+        if (averagedScale > 3) averagedScale = 3; //cap the distortion so sudden loud noises don't make lag spikes.
         averagedScale -= lowPass
         $("#background-canvas").css({
             "transform": "scale(" + (1 + (averagedScale / bgReactionStrength)) + ")"
@@ -95,7 +109,7 @@ function react(soundData) {
     }
 }
 function mirrorChannels(soundData) {
-    var half_length = Math.ceil(soundData.length / 2);
+    var half_length = Math.floor(soundData.length / 2);
     var leftSide = soundData.splice(0, half_length);
     var rightSide = soundData;
     var rightFlipped = rightSide.reverse();
@@ -104,7 +118,7 @@ function mirrorChannels(soundData) {
 }
 function mergeChannels(soundData) {
     var newData = [];
-    var half_length = Math.ceil(soundData.length / 2);
+    var half_length = Math.floor(soundData.length / 2);
     for (var i = 0; i < half_length; i++) {
         newData.push((soundData[i] + soundData[i + half_length]) / 2);
     }
@@ -121,7 +135,7 @@ function processSensitivity(soundData) {
 function smoothWaveform(soundData) {
     var firstPass = [];
     for (i in soundData) {
-        if (i > 0 && i < 126) {
+        if (i > 0 && i < soundData.length - 1) {
             var smoothedPoint = (((soundData[i - 1] * 1) + soundData[i] * 2) + (soundData[parseInt(i) + 1] * 1)) / 4
             firstPass.push(smoothedPoint)
         } else {
@@ -202,7 +216,12 @@ function processAudioData(soundData) {
     //soundData = smoothPass(soundData, smoothPasses); //wtf... not working just because in loop????
     return soundData;
 }
+var setInitialBarCount = false;
 function updateGraph(soundData) {
+    if (!setInitialBarCount && soundData.length > 1) {
+        audioData.labels = genrateLabelList(' ', soundData.length);
+        setInitialBarCount = true;
+    }
     audioData.datasets[0].data = soundData;
     audioChart.update(1);
 }
@@ -242,9 +261,7 @@ var audioChart = new Chart(audioChartctx, {
                 },
                 ticks: {
                     display: false //this will remove only the label
-                },
-                categoryPercentage: 1,
-                barPercentage: 0.7
+                }
             }]
         }
     }

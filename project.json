@@ -189,7 +189,7 @@
             "mirroredMode": {
                 "condition": "soundVis.value",
                 "order": 16,
-                "text": "LR Mirror Mode",
+                "text": "Mirror Mode",
                 "type": "bool",
                 "value": false
             },
@@ -210,12 +210,12 @@
             },
             "reactionLowPass": {
                 "condition": "soundReaction.value",
-                "max": 100,
+                "max": 20,
                 "min": 0,
                 "order": 20,
-                "text": "Reaction Low Pass",
+                "text": "Reaction Sensitivity",
                 "type": "slider",
-                "value": 15
+                "value": 5
             },
             "autoGrayscale": {
                 "condition": "soundReaction.value",

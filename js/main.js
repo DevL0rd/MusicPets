@@ -259,7 +259,6 @@ window.wallpaperPropertyListener = {
                 } else {
                     isVideo = false;
                     $("#image").attr("src", bgSource)
-                    
                 }
             }
         }
@@ -288,6 +287,7 @@ window.wallpaperPropertyListener = {
         if (properties.mirroredMode) {
             if (properties.mirroredMode.value) {
                 mirroredMode = properties.mirroredMode.value
+                setInitialBarCount = false;
             }
         }
 

@@ -1,6 +1,6 @@
 #audioVisualizer {
 	position: absolute;
-	bottom: 40px;
+	bottom: 30px;
 	left: -5px;
 	width: calc(100% + 5px);
 	height: 40%;
