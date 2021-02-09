@@ -215,7 +215,7 @@
                 "order": 20,
                 "text": "Reaction Sensitivity",
                 "type": "slider",
-                "value": 5
+                "value": 8
             },
             "autoGrayscale": {
                 "condition": "soundReaction.value",

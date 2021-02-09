@@ -1,4 +1,3 @@
-var bgReactionStrength = 15;
 var soundReaction = true;
 var visRainbow = false;
 var soundDataCache = [];
@@ -50,35 +49,34 @@ function react(soundData) {
             total += soundData[i] * (soundData.length - i) / soundData.length; //Give base more weight from 1, to trebel of 0
         }
     }
-    averagedScale = (total / soundData.length) * 2;
+    averagedScale = (total / soundData.length);
     
     // console.log("---end---")
     var lowPass = reactionLowPass / 100;
     // console.log(averagedScale+"-"+lowPass)
     if (averagedScale > lowPass) { //get reactions only in this range
-        if (averagedScale > 3) averagedScale = 3; //cap the distortion so sudden loud noises don't make lag spikes.
         averagedScale -= lowPass
         $("#background-canvas").css({
-            "transform": "scale(" + (1 + (averagedScale / bgReactionStrength)) + ")"
+            "transform": "scale(" + (1 + (averagedScale / 2)) + ")"
         })
         if (autoGrayscale) {
             $("#grayscale").css({
-                "filter": "grayscale(" + (averagedScale) + ")"
+                "filter": "grayscale(" + (averagedScale * 4) + ")"
             })
         }
         if (autoBlur) {
             $("#background-canvas").css({
-                "filter": "blur(" + (averagedScale) * 5 + "px)"
+                "filter": "blur(" + (averagedScale) * 75 + "px)"
             });
         }
         if (autoHueRotate) {
             $("#huerotation").css({
-                "filter": "hue-rotate(" + (averagedScale) * 182 + "deg)"
+                "filter": "hue-rotate(" + (averagedScale * 2) + "turn)"
             })
         }
         if (autoSepia) {
             $("#sepia").css({
-                "filter": "sepia(" + (averagedScale) + ")"
+                "filter": "sepia(" + (averagedScale * 4) + ")"
             })
         }
 

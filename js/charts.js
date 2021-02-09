@@ -57,16 +57,19 @@ var pingChart = new Chart(pingChartctx, {
         width: '100%'
     }
 });
-function ping(host, port, pong) {
+function ping(host, pong) {
 
-    var started = new Date().getTime();
+    var started = Date.now();
 
     var http = new XMLHttpRequest();
 
-    http.open("GET", "http://" + host + ":" + port, /*async*/true);
+    http.open("POST", host, /*async*/true);
     http.onreadystatechange = function () {
-        if (http.readyState == 4) {
-            var ended = new Date().getTime();
+        if (http.readyState == 1) {
+            started = Date.now();
+        }
+        if (http.readyState == 2) {
+            var ended = Date.now();
 
             var milliseconds = ended - started;
 
@@ -94,5 +97,5 @@ function pingCallback(pingTime) {
     }
 }
 function testPing() {
-    ping("8.8.8.8", 53, pingCallback)
+    ping("http://httpbin.org/post", pingCallback)
 }
