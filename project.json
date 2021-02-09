@@ -254,6 +254,10 @@
                     {
                         "label": "Rain",
                         "value": "rain"
+                    },
+                    {
+                        "label": "Snow",
+                        "value": "snow"
                     }
                 ],
                 "order": 25,

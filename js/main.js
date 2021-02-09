@@ -294,9 +294,11 @@ window.wallpaperPropertyListener = {
         if (properties.weather) {
             if (properties.weather.value) {
                 if (properties.weather.value == "auto") {
-                    stopRain();
+                    $('#weather').removeClass('rain').removeClass('snow');
                 } else if (properties.weather.value == "rain") {
-                    makeItRain();
+                    $('#weather').addClass('rain').removeClass('snow');
+                } else if (properties.weather.value == "snow") {
+                    $('#weather').addClass('snow').removeClass('rain');
                 }
             }
         }
