@@ -304,6 +304,12 @@ window.wallpaperPropertyListener = {
                 tween = 1 - properties.tween.value / 100;
             }
         }
+        // sensitivity
+        if (properties.sensitivity) {
+            if (properties.sensitivity.value) {
+                volumeCutoff = 1 - (properties.sensitivity.value / 100);
+            }
+        }
         if (properties.normalizationSpeed) {
             if (properties.normalizationSpeed.value) {
                 normalizationSpeed = properties.normalizationSpeed.value / 100;
@@ -354,7 +360,7 @@ function render() {
         } else {
             bgCtx.drawImage(image, 0, 0, bgCanvas.width, bgCanvas.height);
         }
-        
+
         //render sound stuff
         visualize();
     }

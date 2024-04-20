@@ -6,7 +6,7 @@ var autoBlur = false;
 var autoHueRotate = false;
 var autoSepia = false;
 var volumeCutoff = 0.2;
-var smoothing = 0.3;
+var smoothing = 0.2;
 var tween = 0.3;
 var normalizationSpeed = 0.99;
 var mirroredMode = false;
@@ -25,7 +25,7 @@ function audioListener(soundData) {
         soundData = normlizeWaveform(soundData);
         soundData = processSensitivity(soundData);
         if (!mirroredMode) {
-            soundData = insertMoreBars(soundData);
+            soundData = insertMoreBars(soundData, 1);
         }
 
         soundDataCache = soundData;
@@ -64,22 +64,31 @@ function calculateBassReaction(soundData) {
     for (let i = 0; i <= bassEnd; i++) {
         bassEnergy += soundData[i];
     }
-
     // Normalize the reaction value to be between 0 and 1
     let reaction = bassEnergy / (bassEnd + 1);
+    // cutoff value to ignore low volume
+    if (reaction < volumeCutoff) {
+        reaction = 0;
+    } else {
+        reaction = reaction - volumeCutoff;
+        // Normalize the reaction value to be between 0 and 1
+        reaction = reaction / (1 - volumeCutoff);
+    }
     return Math.min(Math.max(reaction, 0), 1); // Ensures value is between 0 and 1
 }
+
+
 function react(soundData) {
     var reactionStrength = calculateBassReaction(soundData);
     // console.log("---end---")
     if (reactionStrength > 0.05) { //get reactions only in this range
         reactionStrength -= 0.05;
         $("#background-canvas").css({
-            "transform": "scale(" + (1 + reactionStrength / 8) + ")"
+            "transform": "scale(" + (1 + reactionStrength / 5) + ")"
         })
         if (autoGrayscale) {
             $("#grayscale").css({
-                "filter": "grayscale(" + (reactionStrength / 2) + ")"
+                "filter": "grayscale(" + (reactionStrength) + ")"
             })
         }
         if (autoBlur) {
@@ -89,12 +98,12 @@ function react(soundData) {
         }
         if (autoHueRotate) {
             $("#huerotation").css({
-                "filter": "hue-rotate(" + reactionStrength / 2 + "turn)"
+                "filter": "hue-rotate(" + reactionStrength + "turn)"
             })
         }
         if (autoSepia) {
             $("#sepia").css({
-                "filter": "sepia(" + (reactionStrength / 2) + ")"
+                "filter": "sepia(" + (reactionStrength) + ")"
             })
         }
 
@@ -144,11 +153,7 @@ function processSensitivity(soundData) {
     var firstPass = [];
     for (i in soundData) {
         var dataPoint = soundData[i];
-        // have a cutoff point to ignore low volume
-        if (dataPoint < volumeCutoff) {
-            dataPoint = 0;
-        }
-        firstPass.push(Math.pow(dataPoint, 1.6)); //leaving this 2 for now because looks nice. set larger than 1 to emphasize peaks set smaller fractions to emphasize lower peaks
+        firstPass.push(Math.pow(dataPoint, 1.5)); //leaving this 2 for now because looks nice. set larger than 1 to emphasize peaks set smaller fractions to emphasize lower peaks
     }
     return firstPass;
 }
@@ -169,13 +174,24 @@ function normlizeWaveform(soundData) {
     return soundData;
 }
 
-function insertMoreBars(soundData) {
+function insertMoreBars(data, barsToAdd) {
     var newData = [];
-    for (i in soundData) {
-        newData.push(soundData[i] * 0.8);
-        newData.push(soundData[i]);
-        newData.push(soundData[i] * 0.8);
+    for (var i = 0; i < data.length - 1; i++) {
+        var current = data[i];
+        var next = data[i + 1];
+
+        newData.push(current);
+
+        for (var j = 0; j < barsToAdd; j++) {
+            var fraction = (j + 1) / (barsToAdd + 1);
+            var interpolatedValue = current + fraction * (next - current);
+            newData.push(interpolatedValue);
+        }
     }
+
+    // Don't forget to push the last data point
+    newData.push(data[data.length - 1]);
+
     return newData;
 }
 
