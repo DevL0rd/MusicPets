@@ -246,7 +246,38 @@ window.wallpaperPropertyListener = {
                 })
             }
         }
-                    
+        // autoBrightness
+        if (properties.autoBrightness) {
+            autoBrightness = properties.autoBrightness.value;
+            if (!autoBrightness) {
+                $("#brightness").css({
+                    "filter": "none"
+                })
+            };
+        }
+
+        // autoContrast
+        if (properties.autoContrast) {
+            autoContrast = properties.autoContrast.value;
+            if (!autoContrast) {
+                $("#contrast").css({
+                    "filter": "none"
+                })
+            };
+        }
+
+        // autoSaturation
+
+        if (properties.autoSaturation) {
+            autoSaturation = properties.autoSaturation.value;
+            if (!autoSaturation) {
+                $("#saturation").css({
+                    "filter": "none"
+                })
+            };
+        }
+        
+           
         if (properties.autoGrayscale) {
             autoGrayscale = properties.autoGrayscale.value;
             if (!autoGrayscale) {
@@ -255,6 +286,7 @@ window.wallpaperPropertyListener = {
                 })
             };
         }
+        
         if (properties.autoBlur) {
             autoBlur = properties.autoBlur.value;
             if (!autoBlur) {

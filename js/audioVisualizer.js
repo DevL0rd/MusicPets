@@ -1,6 +1,9 @@
 var soundReaction = true;
 var visRainbow = false;
 var soundDataCache = [];
+var autoBrightness = false;
+var autoContrast = false;
+var autoSaturate = false;
 var autoGrayscale = false;
 var autoBlur = false;
 var autoHueRotate = false;
@@ -84,8 +87,23 @@ function react(soundData) {
     if (reactionStrength > 0.05) { //get reactions only in this range
         reactionStrength -= 0.05;
         $("#background-canvas").css({
-            "transform": "scale(" + (1 + reactionStrength / 5) + ")"
+            "transform": "scale(" + (1 + reactionStrength / 3) + ")"
         })
+        if (autoBrightness) {
+            $("#brightness").css({
+                "filter": "brightness(" + (1 + reactionStrength) + ")"
+            })
+        }
+        if (autoContrast) {
+            $("#contrast").css({
+                "filter": "contrast(" + (1 + reactionStrength) + ")"
+            })
+        }
+        if (autoSaturate) {
+            $("#saturation").css({
+                "filter": "saturate(" + (1 + reactionStrength) + ")"
+            })
+        }
         if (autoGrayscale) {
             $("#grayscale").css({
                 "filter": "grayscale(" + (reactionStrength) + ")"
@@ -111,6 +129,21 @@ function react(soundData) {
         $("#background-canvas").css({
             "transform": "none"
         })
+        if (autoBrightness) {
+            $("#brightness").css({
+                "filter": "none"
+            })
+        }
+        if (autoContrast) {
+            $("#contrast").css({
+                "filter": "none"
+            })
+        }
+        if (autoSaturate) {
+            $("#saturation").css({
+                "filter": "none"
+            })
+        }
         if (autoGrayscale) {
             $("#grayscale").css({
                 "filter": "none"
@@ -170,6 +203,7 @@ function normlizeWaveform(soundData) {
     // normalize value
     for (i = 0; i < soundData.length; i++) {
         soundData[i] /= peakValue;
+        if (soundData[i] > 1) soundData[i] = 1;
     }
     return soundData;
 }

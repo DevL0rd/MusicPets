@@ -250,6 +250,27 @@
                 "type": "slider",
                 "value": 70
             },
+            "autoBrightness": {
+                "condition": "soundReaction.value",
+                "order": 22,
+                "text": "Automate Brightness",
+                "type": "bool",
+                "value": false
+            },
+            "autoContrast": {
+                "condition": "soundReaction.value",
+                "order": 22,
+                "text": "Automate Contrast",
+                "type": "bool",
+                "value": false
+            },
+            "autoSaturation": {
+                "condition": "soundReaction.value",
+                "order": 22,
+                "text": "Automate Saturation",
+                "type": "bool",
+                "value": false
+            },
             "autoGrayscale": {
                 "condition": "soundReaction.value",
                 "order": 22,
