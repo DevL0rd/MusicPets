@@ -4,6 +4,7 @@ var bgCtx = bgCanvas.getContext('2d');
 var video = document.getElementById('video');
 var image = document.getElementById('image');
 var isVideo = false;
+
 $(document).ready(function () {
     window.wallpaperRegisterAudioListener(audioListener);
     testPing(); //start the ping loop
@@ -217,6 +218,35 @@ window.wallpaperPropertyListener = {
                 })
             }
         }
+        if (properties.visSelect) {
+            if (properties.visSelect.value) {
+                visSelect = properties.visSelect.value;
+                initAudioChart();
+            }
+        }
+
+        if (properties.soundVisOffset) {
+            soundVisOffset = properties.soundVisOffset.value;
+            // set css #audioVisualizer offset
+            //default: bottom: 30px;
+            $("#audioVisualizer").css({
+                "bottom": soundVisOffset + "px"
+            })
+        }
+        // visBgGradient
+        if (properties.visBgGradient) {
+            visBgGradient = properties.visBgGradient.value;
+            if (visBgGradient) {
+                $("#audioVisualizer").css({
+                    "background": "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)"
+                })
+            } else {
+                $("#audioVisualizer").css({
+                    "background": "none"
+                })
+            }
+        }
+                    
         if (properties.autoGrayscale) {
             autoGrayscale = properties.autoGrayscale.value;
             if (!autoGrayscale) {
@@ -253,7 +283,7 @@ window.wallpaperPropertyListener = {
         if (properties.bgSource) {
             if (properties.bgSource.value) {
                 var bgSource = "file:///" + properties.bgSource.value;
-                if (bgSource.toLowerCase().includes(".webm")) {
+                if (bgSource.toLowerCase().includes(".webm") || bgSource.toLowerCase().includes(".mp4")) {
                     isVideo = true;
                     $("#video").attr("src", bgSource)
                 } else {
@@ -269,19 +299,14 @@ window.wallpaperPropertyListener = {
                 addNeko(true);
             }
         }
-        if (properties.reactionLowPass) {
-            if (properties.reactionLowPass.value) {
-                reactionLowPass = properties.reactionLowPass.value
-            }
-        }
         if (properties.tween) {
             if (properties.tween.value) {
-                tween = properties.tween.value
+                tween = 1 - properties.tween.value / 100;
             }
         }
         if (properties.normalizationSpeed) {
             if (properties.normalizationSpeed.value) {
-                normalizationSpeed = properties.normalizationSpeed.value
+                normalizationSpeed = properties.normalizationSpeed.value / 100;
             }
         }
         if (properties.mirroredMode) {
@@ -329,6 +354,7 @@ function render() {
         } else {
             bgCtx.drawImage(image, 0, 0, bgCanvas.width, bgCanvas.height);
         }
+        
         //render sound stuff
         visualize();
     }

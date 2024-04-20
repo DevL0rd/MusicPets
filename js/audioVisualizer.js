@@ -5,78 +5,96 @@ var autoGrayscale = false;
 var autoBlur = false;
 var autoHueRotate = false;
 var autoSepia = false;
-var reactionLowPass = 15
-var smoothPasses = 3;
-var tween = 60;
-var normalizationSpeed = 99;
+var volumeCutoff = 0.2;
+var smoothing = 0.3;
+var tween = 0.3;
+var normalizationSpeed = 0.99;
 var mirroredMode = false;
+var visSelect = "bar";
+var audioChart = null;
+var canvasBlur = 0;
 function audioListener(soundData) {
     //128 data points in this
-    // $("#testOut").html(soundData[0])
     if (!paused) {
-        // soundData = correctWithPinkNoiseResults(soundData);
         if (mirroredMode) {
             soundData = mirrorChannels(soundData);
         } else {
             soundData = mergeChannels(soundData);
         }
-        soundDataCache = processAudioData(soundData);
+        
+        soundData = normlizeWaveform(soundData);
+        soundData = processSensitivity(soundData);
+        if (!mirroredMode) {
+            soundData = insertMoreBars(soundData);
+        }
+
+        soundDataCache = soundData;
     }
 }
-function visualize() {
-    var audioDats = tweenData(soundDataCache);
-    updateGraph(audioDats);
-    if (soundReaction) {
-        react(audioDats);
+let temporalSmoothedValues = [];  // Starts empty
+function combinedSmoothing(newData) {
+    // Initialize temporalSmoothedValues if empty
+    if (temporalSmoothedValues.length === 0) {
+        temporalSmoothedValues = newData.slice();
     }
+
+    // Temporal smoothing
+    for (let i = 0; i < newData.length; i++) {
+        temporalSmoothedValues[i] = tween * newData[i] + (1 - tween) * temporalSmoothedValues[i];
+    }
+
+    // Spatial smoothing
+    let spatialSmoothedData = new Array(64);
+    for (let i = 0; i < temporalSmoothedValues.length; i++) {
+        let prev = i > 0 ? temporalSmoothedValues[i - 1] : temporalSmoothedValues[i];
+        let next = i < temporalSmoothedValues.length - 1 ? temporalSmoothedValues[i + 1] : temporalSmoothedValues[i];
+        spatialSmoothedData[i] = smoothing * prev + (1 - 2 * smoothing) * temporalSmoothedValues[i] + smoothing * next;
+    }
+
+    // Update the temporal smoothed values with spatially smoothed data for continuity in temporal smoothing
+    temporalSmoothedValues = spatialSmoothedData.slice();
+
+    return spatialSmoothedData;
+}
+
+
+function calculateBassReaction(soundData) {
+    let bassEnd = 10; // Index up to which bass frequencies are considered
+    let bassEnergy = 0;
+    for (let i = 0; i <= bassEnd; i++) {
+        bassEnergy += soundData[i];
+    }
+
+    // Normalize the reaction value to be between 0 and 1
+    let reaction = bassEnergy / (bassEnd + 1);
+    return Math.min(Math.max(reaction, 0), 1); // Ensures value is between 0 and 1
 }
 function react(soundData) {
-    var total = 0;
-    if (mirroredMode) {
-        soundData = mergeChannels(soundData);
-    }
-    var averagedScale = 0;
-    if (mirroredMode) {
-        var half_length = Math.floor(soundData.length / 2);
-        for (var i = 1; i < half_length; i++) {
-            total += soundData[i] * (half_length - i) / half_length; //Give base more weight from 1, to trebel of 0
-        }
-        for (var i = soundData.length - 1; i >= half_length; i--) {
-            total += soundData[i] * (i - half_length) / half_length; //Give base more weight from 1, to trebel of 0
-        }
-    } else {
-        for (var i = 1; i < soundData.length; i++) {
-            total += soundData[i] * (soundData.length - i) / soundData.length; //Give base more weight from 1, to trebel of 0
-        }
-    }
-    averagedScale = (total / soundData.length);
-    
+    var reactionStrength = calculateBassReaction(soundData);
     // console.log("---end---")
-    var lowPass = reactionLowPass / 100;
-    // console.log(averagedScale+"-"+lowPass)
-    if (averagedScale > lowPass) { //get reactions only in this range
-        averagedScale -= lowPass
+    if (reactionStrength > 0.05) { //get reactions only in this range
+        reactionStrength -= 0.05;
         $("#background-canvas").css({
-            "transform": "scale(" + (1 + (averagedScale / 2)) + ")"
+            "transform": "scale(" + (1 + reactionStrength / 8) + ")"
         })
         if (autoGrayscale) {
             $("#grayscale").css({
-                "filter": "grayscale(" + (averagedScale * 4) + ")"
+                "filter": "grayscale(" + (reactionStrength / 2) + ")"
             })
         }
         if (autoBlur) {
             $("#background-canvas").css({
-                "filter": "blur(" + (averagedScale) * 75 + "px)"
+                "filter": "blur(" + (reactionStrength) * 5 + "px)"
             });
         }
         if (autoHueRotate) {
             $("#huerotation").css({
-                "filter": "hue-rotate(" + (averagedScale * 2) + "turn)"
+                "filter": "hue-rotate(" + reactionStrength / 2 + "turn)"
             })
         }
         if (autoSepia) {
             $("#sepia").css({
-                "filter": "sepia(" + (averagedScale * 4) + ")"
+                "filter": "sepia(" + (reactionStrength / 2) + ")"
             })
         }
 
@@ -126,73 +144,31 @@ function processSensitivity(soundData) {
     var firstPass = [];
     for (i in soundData) {
         var dataPoint = soundData[i];
-        firstPass.push(Math.pow(dataPoint, 1.5)); //leaving this 2 for now because looks nice. set larger than 1 to emphasize peaks set smaller fractions to emphasize lower peaks
+        // have a cutoff point to ignore low volume
+        if (dataPoint < volumeCutoff) {
+            dataPoint = 0;
+        }
+        firstPass.push(Math.pow(dataPoint, 1.6)); //leaving this 2 for now because looks nice. set larger than 1 to emphasize peaks set smaller fractions to emphasize lower peaks
     }
     return firstPass;
 }
-function smoothWaveform(soundData) {
-    var firstPass = [];
-    for (i in soundData) {
-        if (i > 0 && i < soundData.length - 1) {
-            var smoothedPoint = (((soundData[i - 1] * 1) + soundData[i] * 2) + (soundData[parseInt(i) + 1] * 1)) / 4
-            firstPass.push(smoothedPoint)
-        } else {
-            firstPass.push(soundData[i])
-        }
-    }
-    return firstPass;
 
-}
-var previousSoundData = [];
-function tweenData(soundData) {
-    var firstPass = [];
-    var tweenFloat = tween / 100;
-    var tweenFlip = 1 - tweenFloat
-    if (previousSoundData.length) {
-        for (i in soundData) {
-            firstPass.push(previousSoundData[i] * tweenFloat + soundData[i] * tweenFlip);
-        }
-        previousSoundData = firstPass;
-        return firstPass;
-    } else {
-        previousSoundData = soundData;
-        return soundData;
-    }
-}
 var peakValue = 1;
 function normlizeWaveform(soundData) {
     var max = 0;
-    var normFloat = normalizationSpeed / 100;
-    var normFlip = 1 - normFloat
+    var normFlip = 1 - normalizationSpeed
     for (i in soundData) {
         if (soundData[i] > max) max = soundData[i];
     }
     // adjust ratio to how fast or slow you want normalization to react volume changes
-    peakValue = peakValue * normFloat + max * normFlip;
+    peakValue = peakValue * normalizationSpeed + max * normFlip;
     // normalize value
     for (i = 0; i < soundData.length; i++) {
         soundData[i] /= peakValue;
     }
     return soundData;
 }
-var pinkNoiseOld = [1.1760367470305, 0.85207379418243, 0.68842437227852, 0.63767902570829, 0.5452348949654, 0.50723325864167, 0.4677726234682, 0.44204182748767, 0.41956517802157, 0.41517375040002, 0.41312118577934, 0.40618363960446, 0.39913707474975, 0.38207008614508, 0.38329789106488, 0.37472136606245, 0.36586428412968, 0.37603017335105, 0.39762590761573, 0.39391828858591, 0.37930603769622, 0.39433365764563, 0.38511504613859, 0.39082579241834, 0.3811852720504, 0.40231453727161, 0.40244151133175, 0.39965366884521, 0.39761103827545, 0.51136400422212, 0.66151212038954, 0.66312205226679, 0.7416276690995, 0.74614971301133, 0.84797007577483, 0.8573583910469, 0.96382997811663, 0.99819377577185, 1.0628692615814, 1.1059083969751, 1.1819808497335, 1.257092297208, 1.3226521464753, 1.3735992532905, 1.4953223705889, 1.5310064942373, 1.6193923584808, 1.7094805527135, 1.7706604552218, 1.8491987941428, 1.9238418849406, 2.0141596921333, 2.0786429508827, 2.1575522518646, 2.2196355526005, 2.2660112509705, 2.320762171749, 2.3574848254513, 2.3986127976537, 2.4043566176474, 2.4280476777842, 2.3917477397336, 2.4032522546622, 2.3614180150678];
-var pinkNoiseNew = [1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 0.38207008614508, 0.38329789106488, 0.37472136606245, 0.36586428412968, 0.37603017335105, 0.39762590761573, 0.39391828858591, 0.37930603769622, 0.39433365764563, 0.38511504613859, 0.39082579241834, 0.3811852720504, 0.40231453727161, 0.40244151133175, 0.39965366884521, 0.39761103827545, 0.51136400422212, 0.66151212038954, 0.66312205226679, 0.7416276690995, 0.74614971301133, 0.84797007577483, 0.8573583910469, 0.96382997811663, 0.99819377577185, 1.0628692615814, 1.1059083969751, 1.1819808497335, 1.257092297208, 1.3226521464753, 1.3735992532905, 1.4953223705889, 1.5310064942373, 1.6193923584808, 1.7094805527135, 1.7706604552218, 1.8491987941428, 1.9238418849406, 2.0141596921333, 2.0786429508827, 2.0786429508827, 2.0786429508827, 2.0786429508827, 2.0786429508827, 2.0786429508827, 2.0786429508827, 2.4043566176474, 2.4280476777842, 2.3917477397336, 2.4032522546622, 2.4032522546622];
-var pinkNoise = pinkNoiseNew;
-function correctWithPinkNoiseResults(soundData) {
 
-    for (var i = 0; i < 64; i++) {
-        soundData[i] /= pinkNoise[i];
-        soundData[i + 64] /= pinkNoise[i];
-    }
-    return soundData;
-}
-function smoothPass(soundData, passes) {
-    while (passes > 0) {
-        soundData = smoothWaveform(soundData);
-        passes--;
-    }
-    $("#debug").html(passes)
-}
 function insertMoreBars(soundData) {
     var newData = [];
     for (i in soundData) {
@@ -202,18 +178,7 @@ function insertMoreBars(soundData) {
     }
     return newData;
 }
-function processAudioData(soundData) {
-    soundData = normlizeWaveform(soundData);
-    soundData = processSensitivity(soundData);
-    if (!mirroredMode) {
-        soundData = insertMoreBars(soundData);
-    }
-    soundData = smoothWaveform(soundData);
-    soundData = smoothWaveform(soundData);
-    soundData = smoothWaveform(soundData);
-    //soundData = smoothPass(soundData, smoothPasses); //wtf... not working just because in loop????
-    return soundData;
-}
+
 var setInitialBarCount = false;
 function updateGraph(soundData) {
     if (!setInitialBarCount && soundData.length > 1) {
@@ -234,38 +199,46 @@ var audioData = {
     }]
 };
 var audioChartctx = document.getElementById('audioCanvas').getContext('2d');
-var audioChart = new Chart(audioChartctx, {
-    type: 'bar',
-    data: audioData,
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        legend: {
-            display: false
-        },
-        scales: {
-            yAxes: [{
-                gridLines: {
-                    display: false
-                },
-                ticks: {
-                    display: false, //this will remove only the label
-                    max: 2
+function initAudioChart() {
+    audioChart = new Chart(audioChartctx, {
+        type: visSelect,
+        data: audioData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            // don't show the points on the line
+            elements: {
+                point: {
+                    radius: 0
                 }
-            }],
-            xAxes: [{
-                gridLines: {
-                    display: false
-                },
-                ticks: {
-                    display: false //this will remove only the label
-                }
-            }]
+            },
+            scales: {
+                yAxes: [{
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        display: false, //this will remove only the label
+                        max: 2
+                    }
+                }],
+                xAxes: [{
+                    gridLines: {
+                        display: false
+                    },
+                    ticks: {
+                        display: false //this will remove only the label
+                    }
+                }]
+            }
         }
-    }
-});
-audioChart.update(1);
-
+    });
+    audioChart.update(1);
+}
+initAudioChart();
 
 var r = 255, g = 0, b = 0;
 function rainbowLoop() {
@@ -285,5 +258,16 @@ function rainbowLoop() {
         audioData.datasets[0].backgroundColor = "rgba(" + r + "," + g + "," + b + ", 0.6)";
         audioChart.update(0);
         requestAnimationFrame(rainbowLoop);
+    }
+}
+
+
+function visualize() {
+    if (soundDataCache.length) {
+        var soundData = combinedSmoothing(soundDataCache);
+        updateGraph(soundData);
+        if (soundReaction) {
+            react(soundData);
+        }
     }
 }

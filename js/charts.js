@@ -97,5 +97,5 @@ function pingCallback(pingTime) {
     }
 }
 function testPing() {
-    ping("http://httpbin.org/post", pingCallback)
+    ping("https://www.google.com/thisisjustsomedumbassfakeendpointtotestlatency", pingCallback)
 }

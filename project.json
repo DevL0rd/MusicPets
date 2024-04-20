@@ -80,7 +80,7 @@
                 "order": 1,
                 "text": "Background (vid/img)",
                 "type": "file",
-                "value": "./img/bg.jpg"
+                "value": "C:/Program Files (x86)/Steam/steamapps/common/wallpaper_engine/projects/myprojects/MusicPets/img/floating_ins_space_no_astronaut.webm"
             },
             "blur": {
                 "max": 100,
@@ -172,29 +172,61 @@
                 "type": "bool",
                 "value": true
             },
+            "visSelect": {
+                "options": [
+                    {
+                        "label": "Bar Graph",
+                        "value": "bar"
+                    },
+                    {
+                        "label": "Line Graph",
+                        "value": "line"
+                    }
+                ],
+                "order": 14,
+                "text": "Visualizer Type",
+                "type": "combo",
+                "value": "bar"
+            },
+            "soundVisOffset": {
+                "condition": "soundVis.value",
+                "max": 100,
+                "min": 0,
+                "order": 14,
+                "text": "Visualizer Offset",
+                "type": "slider",
+                "value": 30
+            },
+            "visBgGradient": {
+                "condition": "soundVis.value",
+                "order": 15,
+                "text": "Visualizer BG Gradient",
+                "type": "bool",
+                "value": true
+            },
             "visRainbow": {
                 "condition": "soundVis.value",
-                "order": 14,
+                "order": 16,
                 "text": "Rainbbow Vis",
                 "type": "bool",
                 "value": false
             },
             "visColor": {
                 "condition": "soundVis.value && !visRainbow.value",
-                "order": 15,
+                "order": 17,
                 "text": "Visualizer Color",
                 "type": "color",
                 "value": "1 1 1"
             },
             "mirroredMode": {
                 "condition": "soundVis.value",
-                "order": 16,
+                "order": 18,
                 "text": "Mirror Mode",
                 "type": "bool",
                 "value": false
             },
             "soundReaction": {
-                "order": 17,
+                "order": 19,
                 "text": "Sound Reaction",
                 "type": "bool",
                 "value": true
@@ -202,45 +234,36 @@
             "tween": {
                 "condition": "soundReaction.value",
                 "max": 100,
-                "min": 0,
-                "order": 19,
+                "min": 50,
+                "order": 20,
                 "text": "Tweening",
                 "type": "slider",
                 "value": 70
             },
-            "reactionLowPass": {
-                "condition": "soundReaction.value",
-                "max": 20,
-                "min": 0,
-                "order": 20,
-                "text": "Reaction Sensitivity",
-                "type": "slider",
-                "value": 8
-            },
             "autoGrayscale": {
                 "condition": "soundReaction.value",
-                "order": 21,
+                "order": 22,
                 "text": "Automate Grayscale",
                 "type": "bool",
                 "value": false
             },
             "autoSepia": {
                 "condition": "soundReaction.value",
-                "order": 22,
+                "order": 23,
                 "text": "Automate Sepia",
                 "type": "bool",
                 "value": false
             },
             "autoBlur": {
                 "condition": "soundReaction.value",
-                "order": 23,
+                "order": 24,
                 "text": "Automate Blur",
                 "type": "bool",
                 "value": false
             },
             "autoHueRotate": {
                 "condition": "soundReaction.value",
-                "order": 24,
+                "order": 25,
                 "text": "Automate Hue Rotation",
                 "type": "bool",
                 "value": false
@@ -279,6 +302,7 @@
         "Weather",
         "Widgets"
     ],
+	"preview" : "preview.jpg",
     "title": "Music Pets",
     "type": "web",
     "visibility": "public"
