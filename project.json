@@ -173,6 +173,7 @@
                 "value": true
             },
             "visSelect": {
+                "condition": "soundVis.value",
                 "options": [
                     {
                         "label": "Bar Graph",
