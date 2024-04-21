@@ -91,14 +91,15 @@ function calculateBassReaction(soundData) {
 function react(soundData) {
     var reactionStrength = calculateBassReaction(soundData);
     // console.log("---end---")
-    if (reactionStrength > 0.05) { //get reactions only in this range
-        reactionStrength -= 0.05;
+    if (reactionStrength > 0.1) { //get reactions only in this range
+        reactionStrength -= 0.1;
+        reactionStrength /= 0.9; //normalize to 0-1
         
         if (useBubbles) {
             generateBubbles(Math.floor(reactionStrength * 10));
         }
         $("#background-canvas").css({
-            "transform": "scale(" + (1 + reactionStrength * 1) + ")"
+            "transform": "scale(" + (1 + reactionStrength * 0.5) + ")"
         })
         if (autoBrightness) {
             $("#brightness").css({
