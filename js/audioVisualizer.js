@@ -407,21 +407,19 @@ function doBubbles() {
     cleanupBubbles();
 }
 function visualize() {
+    if (visRainbow) {
+        updateRGB();
+    }
     if (soundDataCache.length) {
-        
-        if (visRainbow) {
-            updateRGB();
-        }
         var soundData = combinedSmoothing(soundDataCache);
         updateGraph(soundData);
         if (soundReaction) {
             react(soundData);
         }
-        // animations:
-        
-        animCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        if (useBubbles) {
-            doBubbles();
-        }
+    }
+    // animations:
+    animCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    if (useBubbles) {
+        doBubbles();
     }
 }
