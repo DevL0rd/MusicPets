@@ -308,9 +308,11 @@ function render() {
         var contentHeight = contentSrc.videoHeight || contentSrc.height;
         // fit screen and maintain aspect ratio
         var scale = Math.max(bgCanvas.width / contentWidth, bgCanvas.height / contentHeight);
-        var x = (bgCanvas.width / 2 - contentWidth / 2 * scale);
-        var y = (bgCanvas.height / 2 - contentHeight / 2 * scale);
-        bgCtx.drawImage(contentSrc, x, y, contentWidth * scale, contentHeight * scale);
+        var nWidth = contentWidth * scale;
+        var nHeight = contentHeight * scale;
+        var x = (bgCanvas.width - nWidth) / 2;
+        var y = (bgCanvas.height - nHeight) / 2;
+        bgCtx.drawImage(contentSrc, x, y, nWidth, nHeight);
 
         // Render sound stuff
         visualize();
