@@ -291,7 +291,7 @@ function initAudioChart() {
 initAudioChart();
 
 var r = 255, g = 0, b = 0;
-function rainbowLoop() {
+function updateRGB() {
     if (visRainbow && !paused) {
         if (r > 0 && b == 0) {
             r--;
@@ -307,13 +307,13 @@ function rainbowLoop() {
         }
         audioData.datasets[0].backgroundColor = "rgba(" + r + "," + g + "," + b + ", 0.6)";
         audioChart.update(0);
-        requestAnimationFrame(rainbowLoop);
     }
 }
 
 
 function visualize() {
     if (soundDataCache.length) {
+        updateRGB();
         var soundData = combinedSmoothing(soundDataCache);
         updateGraph(soundData);
         if (soundReaction) {

@@ -1,340 +1,392 @@
 {
-    "approved": false,
-    "description": "Desktop audio visualizations with pets.",
-    "file": "index.html",
-    "general": {
-        "properties": {
-            "catSelect": {
-                "options": [
-                    {
-                        "label": "Ace",
-                        "value": "ace"
-                    },
-                    {
-                        "label": "Black",
-                        "value": "black"
-                    },
-                    {
-                        "label": "Calico",
-                        "value": "calico"
-                    },
-                    {
-                        "label": "Fancy",
-                        "value": "fancy"
-                    },
-                    {
-                        "label": "Gray",
-                        "value": "gray"
-                    },
-                    {
-                        "label": "Jess",
-                        "value": "jess"
-                    },
-                    {
-                        "label": "Kina",
-                        "value": "kina"
-                    },
-                    {
-                        "label": "Kuramecha",
-                        "value": "kuramecha"
-                    },
-                    {
-                        "label": "Marmalade",
-                        "value": "marmalade"
-                    },
-                    {
-                        "label": "Mike",
-                        "value": "mike"
-                    },
-                    {
-                        "label": "Orange",
-                        "value": "orange"
-                    },
-                    {
-                        "label": "Peach",
-                        "value": "peach"
-                    },
-                    {
-                        "label": "Rabbit",
-                        "value": "rabbit"
-                    },
-                    {
-                        "label": "Snow",
-                        "value": "snow"
-                    },
-                    {
-                        "label": "Socks",
-                        "value": "socks"
-                    },
-                    {
-                        "label": "White",
-                        "value": "white"
-                    }
-                ],
-                "order": 0,
-                "text": "Neko",
-                "type": "combo",
-                "value": "white"
-            },
-            "bgSource": {
-                "order": 1,
-                "text": "Background (vid/img)",
-                "type": "file",
-                "value": "C:/Program Files (x86)/Steam/steamapps/common/wallpaper_engine/projects/myprojects/MusicPets/img/floating_ins_space_no_astronaut.webm"
-            },
-            "blur": {
-                "max": 100,
-                "min": 0,
-                "order": 2,
-                "text": "Blur",
-                "type": "slider",
-                "value": 0
-            },
-            "vignette": {
-                "max": 100,
-                "min": 0,
-                "order": 3,
-                "text": "Vignette",
-                "type": "slider",
-                "value": 0
-            },
-            "contrast": {
-                "max": 300,
-                "min": 0,
-                "order": 4,
-                "text": "Contrast",
-                "type": "slider",
-                "value": 100
-            },
-            "brightness": {
-                "max": 300,
-                "min": 0,
-                "order": 5,
-                "text": "Brightness",
-                "type": "slider",
-                "value": 100
-            },
-            "saturation": {
-                "max": 300,
-                "min": 0,
-                "order": 6,
-                "text": "Saturation",
-                "type": "slider",
-                "value": 100
-            },
-            "grayscale": {
-                "max": 100,
-                "min": 0,
-                "order": 7,
-                "text": "Grayscale",
-                "type": "slider",
-                "value": 0
-            },
-            "sepia": {
-                "max": 100,
-                "min": 0,
-                "order": 8,
-                "text": "Sepia",
-                "type": "slider",
-                "value": 0
-            },
-            "huerotation": {
-                "max": 365,
-                "min": 0,
-                "order": 9,
-                "text": "Hue Rotation",
-                "type": "slider",
-                "value": 0
-            },
-            "invert": {
-                "max": 100,
-                "min": 0,
-                "order": 10,
-                "text": "Invert Colors",
-                "type": "slider",
-                "value": 0
-            },
-            "accentcolor": {
-                "order": 11,
-                "text": "Accents color",
-                "type": "color",
-                "value": "0 1 1"
-            },
-            "chartColor": {
-                "order": 12,
-                "text": "Chart Color",
-                "type": "color",
-                "value": "1 1 1"
-            },
-            "soundVis": {
-                "order": 13,
-                "text": "Enable Visualizer",
-                "type": "bool",
-                "value": true
-            },
-            "visSelect": {
-                "condition": "soundVis.value",
-                "options": [
-                    {
-                        "label": "Bar Graph",
-                        "value": "bar"
-                    },
-                    {
-                        "label": "Line Graph",
-                        "value": "line"
-                    }
-                ],
-                "order": 14,
-                "text": "Visualizer Type",
-                "type": "combo",
-                "value": "bar"
-            },
-            "soundVisOffset": {
-                "condition": "soundVis.value",
-                "max": 100,
-                "min": 0,
-                "order": 14,
-                "text": "Visualizer Offset",
-                "type": "slider",
-                "value": 30
-            },
-            "visBgGradient": {
-                "condition": "soundVis.value",
-                "order": 15,
-                "text": "Visualizer BG Gradient",
-                "type": "bool",
-                "value": true
-            },
-            "visRainbow": {
-                "condition": "soundVis.value",
-                "order": 16,
-                "text": "Rainbbow Vis",
-                "type": "bool",
-                "value": false
-            },
-            "visColor": {
-                "condition": "soundVis.value && !visRainbow.value",
-                "order": 17,
-                "text": "Visualizer Color",
-                "type": "color",
-                "value": "1 1 1"
-            },
-            "mirroredMode": {
-                "condition": "soundVis.value",
-                "order": 18,
-                "text": "Mirror Mode",
-                "type": "bool",
-                "value": false
-            },
-            "soundReaction": {
-                "order": 19,
-                "text": "Sound Reaction",
-                "type": "bool",
-                "value": true
-            },
-            "tween": {
-                "condition": "soundReaction.value",
-                "max": 100,
-                "min": 50,
-                "order": 20,
-                "text": "Tweening",
-                "type": "slider",
-                "value": 70
-            },
-            "sensitivity": {
-                "condition": "soundReaction.value",
-                "max": 100,
-                "min": 0,
-                "order": 21,
-                "text": "Sensitivity",
-                "type": "slider",
-                "value": 70
-            },
-            "autoBrightness": {
-                "condition": "soundReaction.value",
-                "order": 22,
-                "text": "Automate Brightness",
-                "type": "bool",
-                "value": false
-            },
-            "autoContrast": {
-                "condition": "soundReaction.value",
-                "order": 22,
-                "text": "Automate Contrast",
-                "type": "bool",
-                "value": false
-            },
-            "autoSaturation": {
-                "condition": "soundReaction.value",
-                "order": 22,
-                "text": "Automate Saturation",
-                "type": "bool",
-                "value": false
-            },
-            "autoGrayscale": {
-                "condition": "soundReaction.value",
-                "order": 22,
-                "text": "Automate Grayscale",
-                "type": "bool",
-                "value": false
-            },
-            "autoSepia": {
-                "condition": "soundReaction.value",
-                "order": 23,
-                "text": "Automate Sepia",
-                "type": "bool",
-                "value": false
-            },
-            "autoBlur": {
-                "condition": "soundReaction.value",
-                "order": 24,
-                "text": "Automate Blur",
-                "type": "bool",
-                "value": false
-            },
-            "autoHueRotate": {
-                "condition": "soundReaction.value",
-                "order": 25,
-                "text": "Automate Hue Rotation",
-                "type": "bool",
-                "value": false
-            },
-            "weather": {
-                "options": [
-                    {
-                        "label": "Auto",
-                        "value": "auto"
-                    },
-                    {
-                        "label": "Rain",
-                        "value": "rain"
-                    },
-                    {
-                        "label": "Snow",
-                        "value": "snow"
-                    }
-                ],
-                "order": 25,
-                "text": "Weather Integration (WIP)",
-                "type": "combo",
-                "value": "auto"
-            }
-        },
-        "supportsaudioprocessing": true
-    },
-    "tags": [
-        "Music",
-        "Visualization",
-        "Audio",
-        "Pets",
-        "Cats",
-        "Looping",
-        "Video",
-        "Weather",
-        "Widgets"
-    ],
+	"approved" : false,
+	"contentrating" : "Everyone",
+	"description" : "Desktop audio visualizations with pets.",
+	"file" : "index.html",
+	"general" : 
+	{
+		"properties" : 
+		{
+			"autoBlur" : 
+			{
+				"condition" : "soundReaction.value",
+				"index" : 26,
+				"order" : 126,
+				"text" : "Automate Blur",
+				"type" : "bool",
+				"value" : false
+			},
+			"autoBrightness" : 
+			{
+				"condition" : "soundReaction.value",
+				"index" : 21,
+				"order" : 121,
+				"text" : "Automate Brightness",
+				"type" : "bool",
+				"value" : false
+			},
+			"autoContrast" : 
+			{
+				"condition" : "soundReaction.value",
+				"index" : 22,
+				"order" : 122,
+				"text" : "Automate Contrast",
+				"type" : "bool",
+				"value" : false
+			},
+			"autoGrayscale" : 
+			{
+				"condition" : "soundReaction.value",
+				"index" : 23,
+				"order" : 123,
+				"text" : "Automate Grayscale",
+				"type" : "bool",
+				"value" : false
+			},
+			"autoHueRotate" : 
+			{
+				"condition" : "soundReaction.value",
+				"index" : 27,
+				"order" : 127,
+				"text" : "Automate Hue Rotation",
+				"type" : "bool",
+				"value" : false
+			},
+			"autoSaturation" : 
+			{
+				"condition" : "soundReaction.value",
+				"index" : 24,
+				"order" : 124,
+				"text" : "Automate Saturation",
+				"type" : "bool",
+				"value" : false
+			},
+			"autoSepia" : 
+			{
+				"condition" : "soundReaction.value",
+				"index" : 25,
+				"order" : 125,
+				"text" : "Automate Sepia",
+				"type" : "bool",
+				"value" : false
+			},
+			"bgSource" : 
+			{
+				"index" : 1,
+				"order" : 101,
+				"text" : "Background",
+				"type" : "file",
+				"value" : "C:/Program Files (x86)/Steam/steamapps/common/wallpaper_engine/projects/myprojects/MusicPets/img/floating_in_space.webm"
+			},
+			"blur" : 
+			{
+				"index" : 2,
+				"max" : 100,
+				"min" : 0,
+				"order" : 102,
+				"text" : "Blur",
+				"type" : "slider",
+				"value" : 0
+			},
+			"brightness" : 
+			{
+				"index" : 5,
+				"max" : 300,
+				"min" : 0,
+				"order" : 105,
+				"text" : "Brightness",
+				"type" : "slider",
+				"value" : 100
+			},
+			"catSelect" : 
+			{
+				"index" : 0,
+				"options" : 
+				[
+					{
+						"label" : "Ace",
+						"value" : "ace"
+					},
+					{
+						"label" : "Black",
+						"value" : "black"
+					},
+					{
+						"label" : "Calico",
+						"value" : "calico"
+					},
+					{
+						"label" : "Fancy",
+						"value" : "fancy"
+					},
+					{
+						"label" : "Gray",
+						"value" : "gray"
+					},
+					{
+						"label" : "Jess",
+						"value" : "jess"
+					},
+					{
+						"label" : "Kina",
+						"value" : "kina"
+					},
+					{
+						"label" : "Kuramecha",
+						"value" : "kuramecha"
+					},
+					{
+						"label" : "Marmalade",
+						"value" : "marmalade"
+					},
+					{
+						"label" : "Mike",
+						"value" : "mike"
+					},
+					{
+						"label" : "Orange",
+						"value" : "orange"
+					},
+					{
+						"label" : "Peach",
+						"value" : "peach"
+					},
+					{
+						"label" : "Rabbit",
+						"value" : "rabbit"
+					},
+					{
+						"label" : "Snow",
+						"value" : "snow"
+					},
+					{
+						"label" : "Socks",
+						"value" : "socks"
+					},
+					{
+						"label" : "White",
+						"value" : "white"
+					}
+				],
+				"order" : 100,
+				"text" : "Neko",
+				"type" : "combo",
+				"value" : "white"
+			},
+			"contrast" : 
+			{
+				"index" : 4,
+				"max" : 300,
+				"min" : 0,
+				"order" : 104,
+				"text" : "Contrast",
+				"type" : "slider",
+				"value" : 100
+			},
+			"grayscale" : 
+			{
+				"index" : 7,
+				"max" : 100,
+				"min" : 0,
+				"order" : 107,
+				"text" : "Grayscale",
+				"type" : "slider",
+				"value" : 0
+			},
+			"huerotation" : 
+			{
+				"index" : 9,
+				"max" : 365,
+				"min" : 0,
+				"order" : 109,
+				"text" : "Hue Rotation",
+				"type" : "slider",
+				"value" : 0
+			},
+			"invert" : 
+			{
+				"index" : 10,
+				"max" : 100,
+				"min" : 0,
+				"order" : 110,
+				"text" : "Invert Colors",
+				"type" : "slider",
+				"value" : 0
+			},
+			"mirroredMode" : 
+			{
+				"condition" : "soundVis.value",
+				"index" : 17,
+				"order" : 117,
+				"text" : "Mirror Mode",
+				"type" : "bool",
+				"value" : false
+			},
+			"saturation" : 
+			{
+				"index" : 6,
+				"max" : 300,
+				"min" : 0,
+				"order" : 106,
+				"text" : "Saturation",
+				"type" : "slider",
+				"value" : 100
+			},
+			"schemecolor" : 
+			{
+				"order" : 0,
+				"text" : "ui_browse_properties_scheme_color",
+				"type" : "color",
+				"value" : "0 0 0"
+			},
+			"sensitivity" : 
+			{
+				"condition" : "soundReaction.value",
+				"index" : 20,
+				"max" : 100,
+				"min" : 0,
+				"order" : 120,
+				"text" : "Sensitivity",
+				"type" : "slider",
+				"value" : 70
+			},
+			"sepia" : 
+			{
+				"index" : 8,
+				"max" : 100,
+				"min" : 0,
+				"order" : 108,
+				"text" : "Sepia",
+				"type" : "slider",
+				"value" : 0
+			},
+			"soundReaction" : 
+			{
+				"index" : 18,
+				"order" : 118,
+				"text" : "Sound Reaction",
+				"type" : "bool",
+				"value" : true
+			},
+			"soundVis" : 
+			{
+				"index" : 11,
+				"order" : 111,
+				"text" : "Enable Visualizer",
+				"type" : "bool",
+				"value" : true
+			},
+			"soundVisOffset" : 
+			{
+				"condition" : "soundVis.value",
+				"index" : 12,
+				"max" : 100,
+				"min" : 0,
+				"order" : 112,
+				"text" : "Visualizer Offset",
+				"type" : "slider",
+				"value" : 30
+			},
+			"tween" : 
+			{
+				"condition" : "soundReaction.value",
+				"index" : 19,
+				"max" : 100,
+				"min" : 50,
+				"order" : 119,
+				"text" : "Tweening",
+				"type" : "slider",
+				"value" : 70
+			},
+			"vignette" : 
+			{
+				"index" : 3,
+				"max" : 100,
+				"min" : 0,
+				"order" : 103,
+				"text" : "Vignette",
+				"type" : "slider",
+				"value" : 0
+			},
+			"visBgGradient" : 
+			{
+				"condition" : "soundVis.value",
+				"index" : 14,
+				"order" : 114,
+				"text" : "Visualizer BG Gradient",
+				"type" : "bool",
+				"value" : true
+			},
+			"visColor" : 
+			{
+				"condition" : "soundVis.value && !visRainbow.value",
+				"index" : 16,
+				"order" : 116,
+				"text" : "Visualizer Color",
+				"type" : "color",
+				"value" : "1 1 1"
+			},
+			"visRainbow" : 
+			{
+				"condition" : "soundVis.value",
+				"index" : 15,
+				"order" : 115,
+				"text" : "Rainbbow Vis",
+				"type" : "bool",
+				"value" : false
+			},
+			"visSelect" : 
+			{
+				"condition" : "soundVis.value",
+				"index" : 13,
+				"options" : 
+				[
+					{
+						"label" : "Bar Graph",
+						"value" : "bar"
+					},
+					{
+						"label" : "Line Graph",
+						"value" : "line"
+					}
+				],
+				"order" : 113,
+				"text" : "Visualizer Type",
+				"type" : "combo",
+				"value" : "bar"
+			},
+			"weather" : 
+			{
+				"index" : 28,
+				"options" : 
+				[
+					{
+						"label" : "Auto",
+						"value" : "auto"
+					},
+					{
+						"label" : "Rain",
+						"value" : "rain"
+					},
+					{
+						"label" : "Snow",
+						"value" : "snow"
+					}
+				],
+				"order" : 128,
+				"text" : "Weather Integration (WIP)",
+				"type" : "combo",
+				"value" : "auto"
+			}
+		},
+		"supportsaudioprocessing" : true
+	},
 	"preview" : "preview.jpg",
-    "title": "Music Pets",
-    "type": "web",
-    "visibility": "public"
+	"ratingsex" : "none",
+	"ratingviolence" : "none",
+	"tags" : [ "Music" ],
+	"title" : "Music Pets",
+	"type" : "web",
+	"version" : 0,
+	"visibility" : "public"
 }

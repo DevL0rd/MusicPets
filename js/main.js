@@ -7,8 +7,6 @@ var isVideo = false;
 
 $(document).ready(function () {
     window.wallpaperRegisterAudioListener(audioListener);
-    testPing(); //start the ping loop
-    updateClock(); //start clock loop
     bgCanvas.width = window.innerWidth; //set render width and height
     bgCanvas.height = window.innerHeight; //different from canvas width and height
     render();
@@ -18,18 +16,15 @@ window.wallpaperPropertyListener = {
     setPaused: function (isPaused) {
         paused = isPaused;
         if (paused) {
-            //$("#content").hide(); //unload dom when not in view for performance when monitor changes resolution
-            $("#background-canvas").trigger('pause');
-        } else {
-            //$("#content").show(); //reload dom
-            testPing(); //start the ping loop
-            updateClock(); //start clock loop
-            render();
-            if (visRainbow) {
-                rainbowLoop();
-            }
             try {
-                $('#background-canvas').trigger('play');
+                video.pause();
+            } catch (error) {
+
+            }
+        } else {
+            render();
+            try {
+                video.play();
             } catch (error) {
 
             }
@@ -53,59 +48,6 @@ window.wallpaperPropertyListener = {
                 background.settings.updateBackgroundDisabled = true;
             } else {
                 background.settings.updateBackgroundDisabled = false;
-            }
-        }
-        if (properties.accentcolor) {
-            if (properties.accentcolor.value) {
-                //Get a rgb string from color value passed by wallpaper-engine
-                var rgbStr = properties.accentcolor.value.split(' ').map(function (c) {
-                    return Math.ceil(c * 255)
-                });
-                //Clock accents
-                $(".clock").css({
-                    "border-color": "rgba(" + rgbStr + ", 0.7)"
-                })
-                $(".clock").css({
-                    "box-shadow": "inset 3px 3px 6px rgba(0, 0, 0, 0.7), 3px 3px 30px rgba(" + rgbStr + ", 0.7)"
-                })
-                //Chart accents
-                $(".chartpanel").css({
-                    "border-color": "rgba(" + rgbStr + ", 0.7)"
-                })
-                $(".chartpanel").css({
-                    "box-shadow": "inset 3px 3px 6px rgba(0, 0, 0, 0.7), 3px 3px 30px rgba(" + rgbStr + ", 0.7)"
-                })
-            }
-        }
-        if (properties.chartColor) {
-            if (properties.chartColor.value) {
-                //Get a rgb string from color value passed by wallpaper-engine
-                var rgbStr = properties.chartColor.value.split(' ').map(function (c) {
-                    return Math.ceil(c * 255)
-                });
-                //Clock hands
-                $(".clock .hour").css({
-                    "background-color": "rgba(" + rgbStr + ", 0.7)"
-                })
-                $(".clock .minute").css({
-                    "background-color": "rgba(" + rgbStr + ", 0.7)"
-                })
-                $(".clock .second").css({
-                    "background-color": "rgba(" + rgbStr + ", 0.7)"
-                })
-                $(".center").css({
-                    "background-color": "rgba(" + rgbStr + ", 0.7)"
-                })
-                $(".clockText").css({
-                    "color": "rgba(" + rgbStr + ", 0.4)"
-                })
-                //Charts
-                $(".chartTitle").css({
-                    "color": "rgba(" + rgbStr + ", 0.4)"
-                })
-                pingData.datasets[0].backgroundColor = "rgba(" + rgbStr + ", 0.7)";
-                pingData.datasets[0].borderColor = "rgba(" + rgbStr + ", 0.7)";
-                pingChart.update(0);
             }
         }
         if (properties.blur) {
@@ -175,15 +117,15 @@ window.wallpaperPropertyListener = {
                 })
             }
         }
-        if (properties.visColor) {
-            if (properties.visColor.value) {
-                //Get a rgb string from color value passed by wallpaper-engine
-                var rgbStr = properties.visColor.value.split(' ').map(function (c) {
-                    return Math.ceil(c * 255)
-                });
-                audioData.datasets[0].backgroundColor = "rgba(" + rgbStr + ", 0.6)";
-                audioChart.update(0);
-            }
+        // color theme
+        
+        if (properties.visColor.value) {
+            //Get a rgb string from color value passed by wallpaper-engine
+            var rgbStr = properties.visColor.value.split(' ').map(function (c) {
+                return Math.ceil(c * 255)
+            });
+            audioData.datasets[0].backgroundColor = "rgba(" + rgbStr + ", 0.6)";
+            audioChart.update(0);
         }
         if (properties.visRainbow) {
             visRainbow = properties.visRainbow.value;
@@ -386,14 +328,14 @@ function render() {
             }
             fpsThreshold -= 1.0 / settings.fps;
         }
-        //animations
+        // Render the background
         if (isVideo) {
             bgCtx.drawImage(video, 0, 0, bgCanvas.width, bgCanvas.height);
         } else {
             bgCtx.drawImage(image, 0, 0, bgCanvas.width, bgCanvas.height);
         }
 
-        //render sound stuff
+        // Render sound stuff
         visualize();
     }
 }
