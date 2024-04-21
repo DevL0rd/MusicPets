@@ -173,19 +173,6 @@ window.wallpaperPropertyListener = {
                 "bottom": soundVisOffset + "px"
             })
         }
-        // visBgGradient
-        if (properties.visBgGradient) {
-            visBgGradient = properties.visBgGradient.value;
-            if (visBgGradient) {
-                $("#audioVisualizer").css({
-                    "background": "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)"
-                })
-            } else {
-                $("#audioVisualizer").css({
-                    "background": "none"
-                })
-            }
-        }
         // autoBrightness
         if (properties.autoBrightness) {
             autoBrightness = properties.autoBrightness.value;

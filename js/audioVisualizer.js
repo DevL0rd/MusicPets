@@ -72,7 +72,7 @@ function combinedSmoothing(newData) {
 
 
 function calculateBassReaction(soundData) {
-    let bassEnd = 16; // Index up to which bass frequencies are considered
+    let bassEnd = 10; // Index up to which bass frequencies are considered
     let bassEnergy = 0;
     for (let i = 0; i <= bassEnd; i++) {
         bassEnergy += soundData[i];

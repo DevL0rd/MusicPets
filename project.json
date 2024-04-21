@@ -304,15 +304,6 @@
 				"type" : "slider",
 				"value" : 0
 			},
-			"visBgGradient" : 
-			{
-				"condition" : "soundVis.value",
-				"index" : 14,
-				"order" : 114,
-				"text" : "Visualizer BG Gradient",
-				"type" : "bool",
-				"value" : true
-			},
 			"visRainbow" : 
 			{
 				"condition" : "soundVis.value",
