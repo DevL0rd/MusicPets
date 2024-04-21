@@ -257,6 +257,15 @@
 				"type" : "bool",
 				"value" : true
 			},
+			"bubbles" : 
+			{
+				"condition" : "soundReaction.value",
+				"index" : 18,
+				"order" : 118,
+				"text" : "Enable Bubbles",
+				"type" : "bool",
+				"value" : true
+			},
 			"soundVis" : 
 			{
 				"index" : 11,

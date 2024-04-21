@@ -4,6 +4,7 @@ var bgCtx = bgCanvas.getContext('2d');
 var video = document.getElementById('video');
 var image = document.getElementById('image');
 var isVideo = false;
+var schemecolor = "rgba(255, 0, 0, 0.6)";
 
 $(document).ready(function () {
     window.wallpaperRegisterAudioListener(audioListener);
@@ -110,22 +111,26 @@ window.wallpaperPropertyListener = {
         if (properties.schemecolor) {
             if (properties.schemecolor.value) {
                 //Get a rgb string from color value passed by wallpaper-engine
-                var rgbStr = properties.schemecolor.value.split(' ').map(function (c) {
+                schemecolor = properties.schemecolor.value.split(' ').map(function (c) {
                     return Math.ceil(c * 255)
                 });
-                audioData.datasets[0].backgroundColor = "rgba(" + rgbStr + ", 0.6)";
+                r = schemecolor[0];
+                g = schemecolor[1];
+                b = schemecolor[2];
+                audioData.datasets[0].backgroundColor = "rgba(" + schemecolor + ", 0.6)";
                 audioChart.update(0);
             }
         }
         if (properties.visRainbow) {
             visRainbow = properties.visRainbow.value;
             if (!visRainbow) {
-                //Get a rgb string from color value passed by wallpaper-engine
-                var rgbStr = properties.schemecolor.value.split(' ').map(function (c) {
-                    return Math.ceil(c * 255)
-                });
-                audioData.datasets[0].backgroundColor = "rgba(" + rgbStr + ", 0.6)";
+                r = schemecolor[0];
+                g = schemecolor[1];
+                b = schemecolor[2];
+                audioData.datasets[0].backgroundColor = "rgba(" + schemecolor + ", 0.6)";
                 audioChart.update(0);
+            } else {
+                r = 255, g = 0, b = 0;
             }
         }
         
@@ -272,7 +277,13 @@ window.wallpaperPropertyListener = {
                 initAudioChart();
             }
         }
-
+        //bubbles
+        if (properties.bubbles) {
+            useBubbles = properties.bubbles.value;
+            if (!useBubbles) {
+                bubbles = [];
+            }
+        }
         if (properties.weather) {
             if (properties.weather.value) {
                 if (properties.weather.value == "auto") {

@@ -1,4 +1,5 @@
 var soundReaction = true;
+var useBubbles = true;
 var visRainbow = false;
 var soundDataCache = [];
 var autoBrightness = false;
@@ -17,6 +18,14 @@ var visSelect = "bar";
 var audioChart = null;
 var canvasBlur = 0;
 var flipVis = false;
+var soundVisOffset = 0;
+var animCanvas = document.getElementById('animation-canvas');
+var animCtx = animCanvas.getContext('2d');
+
+$(document).ready(function () {
+    animCanvas.width = window.innerWidth;
+    animCanvas.height = window.innerHeight;
+});
 function audioListener(soundData) {
     //128 data points in this
     if (!paused) {
@@ -84,6 +93,10 @@ function react(soundData) {
     // console.log("---end---")
     if (reactionStrength > 0.05) { //get reactions only in this range
         reactionStrength -= 0.05;
+        
+        if (useBubbles) {
+            generateBubbles(Math.floor(reactionStrength * 10));
+        }
         $("#background-canvas").css({
             "transform": "scale(" + (1 + reactionStrength * 1) + ")"
         })
@@ -319,32 +332,95 @@ initAudioChart();
 
 var r = 255, g = 0, b = 0;
 function updateRGB() {
-    if (visRainbow && !paused) {
-        if (r > 0 && b == 0) {
-            r--;
-            g++;
+    if (r > 0 && b == 0) {
+        r--;
+        g++;
+    }
+    if (g > 0 && r == 0) {
+        g--;
+        b++;
+    }
+    if (b > 0 && g == 0) {
+        r++;
+        b--;
+    }
+    audioData.datasets[0].backgroundColor = "rgba(" + r + "," + g + "," + b + ", 0.6)";
+    audioChart.update(0);
+}
+
+var bubbles = [];
+class Bubble {
+    constructor() {
+        this.x = Math.random() * window.innerWidth;
+        this.y = window.innerHeight - soundVisOffset;
+        this.size = Math.random() * 10 + 2;
+        this.speed = Math.random() * 5;
+    }
+    update() {
+        this.y -= this.speed;
+        if (this.y < 0) {
+            this.y = window.innerHeight;
         }
-        if (g > 0 && r == 0) {
-            g--;
-            b++;
+        // shrink the bubble
+        this.size -= 0.03;
+        // remove bubble if it's too small
+        if (this.size < 0) {
+            this.size = 0;
         }
-        if (b > 0 && g == 0) {
-            r++;
-            b--;
-        }
-        audioData.datasets[0].backgroundColor = "rgba(" + r + "," + g + "," + b + ", 0.6)";
-        audioChart.update(0);
+    }
+    render() {
+        animCtx.fillStyle = "rgba(" + r + "," + g + "," + b + ", 0.6)";
+        animCtx.beginPath();
+        animCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        animCtx.fill();
     }
 }
 
+function updateBubbles() {
+    for (var i = 0; i < bubbles.length; i++) {
+        bubbles[i].update();
+    }
+}
+function renderBubbles() {
+    for (var i = 0; i < bubbles.length; i++) {
+        bubbles[i].render();
+    }
+}
+function cleanupBubbles() {
+    for (var i = 0; i < bubbles.length; i++) {
+        if (bubbles[i].size <= 0 || bubbles[i].y <= 0){
+            bubbles.splice(i, 1);
+        }
+    }
+}
+function generateBubbles(count) {
+    
+    for (var i = 0; i < count; i++) {
+        bubbles.push(new Bubble());
+    }
 
+}
+function doBubbles() {
+    updateBubbles();
+    renderBubbles();
+    cleanupBubbles();
+}
 function visualize() {
     if (soundDataCache.length) {
-        updateRGB();
+        
+        if (visRainbow) {
+            updateRGB();
+        }
         var soundData = combinedSmoothing(soundDataCache);
         updateGraph(soundData);
         if (soundReaction) {
             react(soundData);
+        }
+        // animations:
+        
+        animCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        if (useBubbles) {
+            doBubbles();
         }
     }
 }
