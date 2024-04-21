@@ -239,17 +239,6 @@
 				"type" : "color",
 				"value" : "0 0 0"
 			},
-			"sensitivity" : 
-			{
-				"condition" : "soundReaction.value",
-				"index" : 20,
-				"max" : 100,
-				"min" : 0,
-				"order" : 120,
-				"text" : "Sensitivity",
-				"type" : "slider",
-				"value" : 70
-			},
 			"sepia" : 
 			{
 				"index" : 8,
@@ -276,27 +265,25 @@
 				"type" : "bool",
 				"value" : true
 			},
+			"flipVis" : 
+			{
+				"condition" : "soundVis.value",
+				"index" : 12,
+				"order" : 112,
+				"text" : "Flip Visualizer",
+				"type" : "bool",
+				"value" : false
+			},
 			"soundVisOffset" : 
 			{
 				"condition" : "soundVis.value",
 				"index" : 12,
-				"max" : 100,
+				"max" : 1000,
 				"min" : 0,
 				"order" : 112,
 				"text" : "Visualizer Offset",
 				"type" : "slider",
 				"value" : 30
-			},
-			"tween" : 
-			{
-				"condition" : "soundReaction.value",
-				"index" : 19,
-				"max" : 100,
-				"min" : 50,
-				"order" : 119,
-				"text" : "Tweening",
-				"type" : "slider",
-				"value" : 70
 			},
 			"vignette" : 
 			{
@@ -317,15 +304,6 @@
 				"type" : "bool",
 				"value" : true
 			},
-			"visColor" : 
-			{
-				"condition" : "soundVis.value && !visRainbow.value",
-				"index" : 16,
-				"order" : 116,
-				"text" : "Visualizer Color",
-				"type" : "color",
-				"value" : "1 1 1"
-			},
 			"visRainbow" : 
 			{
 				"condition" : "soundVis.value",
@@ -338,7 +316,7 @@
 			"visSelect" : 
 			{
 				"condition" : "soundVis.value",
-				"index" : 13,
+				"index" : 3,
 				"options" : 
 				[
 					{
@@ -348,6 +326,10 @@
 					{
 						"label" : "Line Graph",
 						"value" : "line"
+					},
+					{
+						"label" : "Circle",
+						"value" : "radar"
 					}
 				],
 				"order" : 113,

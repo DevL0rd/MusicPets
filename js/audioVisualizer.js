@@ -3,19 +3,20 @@ var visRainbow = false;
 var soundDataCache = [];
 var autoBrightness = false;
 var autoContrast = false;
-var autoSaturate = false;
+var autoSaturation = false;
 var autoGrayscale = false;
 var autoBlur = false;
 var autoHueRotate = false;
 var autoSepia = false;
 var volumeCutoff = 0.2;
 var smoothing = 0.2;
-var tween = 0.3;
+var tween = 0.25;
 var normalizationSpeed = 0.99;
 var mirroredMode = false;
 var visSelect = "bar";
 var audioChart = null;
 var canvasBlur = 0;
+var flipVis = false;
 function audioListener(soundData) {
     //128 data points in this
     if (!paused) {
@@ -62,24 +63,21 @@ function combinedSmoothing(newData) {
 
 
 function calculateBassReaction(soundData) {
-    let bassEnd = 10; // Index up to which bass frequencies are considered
+    let bassEnd = 16; // Index up to which bass frequencies are considered
     let bassEnergy = 0;
     for (let i = 0; i <= bassEnd; i++) {
         bassEnergy += soundData[i];
     }
     // Normalize the reaction value to be between 0 and 1
     let reaction = bassEnergy / (bassEnd + 1);
-    // cutoff value to ignore low volume
-    if (reaction < volumeCutoff) {
-        reaction = 0;
-    } else {
-        reaction = reaction - volumeCutoff;
-        // Normalize the reaction value to be between 0 and 1
-        reaction = reaction / (1 - volumeCutoff);
-    }
-    return Math.min(Math.max(reaction, 0), 1); // Ensures value is between 0 and 1
+    //reverse exponential reaction
+    // return Math.pow(reaction, 0.5);
+    //logarithmic reaction
+    // return Math.log(reaction + 1)
+    //both
+    return Math.sqrt(Math.log(reaction + 1));
 }
-
+// refactor calculateBassReaction to 
 
 function react(soundData) {
     var reactionStrength = calculateBassReaction(soundData);
@@ -87,31 +85,31 @@ function react(soundData) {
     if (reactionStrength > 0.05) { //get reactions only in this range
         reactionStrength -= 0.05;
         $("#background-canvas").css({
-            "transform": "scale(" + (1 + reactionStrength / 3) + ")"
+            "transform": "scale(" + (1 + reactionStrength * 1) + ")"
         })
         if (autoBrightness) {
             $("#brightness").css({
-                "filter": "brightness(" + (1 + reactionStrength) + ")"
+                "filter": "brightness(" + (1 + reactionStrength * 4) + ")"
             })
         }
         if (autoContrast) {
             $("#contrast").css({
-                "filter": "contrast(" + (1 + reactionStrength) + ")"
+                "filter": "contrast(" + (1 + reactionStrength * 2) + ")"
             })
         }
-        if (autoSaturate) {
+        if (autoSaturation) {
             $("#saturation").css({
-                "filter": "saturate(" + (1 + reactionStrength) + ")"
+                "filter": "saturate(" + ((1 + reactionStrength) * 2) + ")"
             })
         }
         if (autoGrayscale) {
             $("#grayscale").css({
-                "filter": "grayscale(" + (reactionStrength) + ")"
+                "filter": "grayscale(" + (reactionStrength * 2) + ")"
             })
         }
         if (autoBlur) {
             $("#background-canvas").css({
-                "filter": "blur(" + (reactionStrength) * 5 + "px)"
+                "filter": "blur(" + (reactionStrength) * 8 + "px)"
             });
         }
         if (autoHueRotate) {
@@ -121,7 +119,7 @@ function react(soundData) {
         }
         if (autoSepia) {
             $("#sepia").css({
-                "filter": "sepia(" + (reactionStrength) + ")"
+                "filter": "sepia(" + (reactionStrength * 2) + ")"
             })
         }
 
@@ -139,7 +137,7 @@ function react(soundData) {
                 "filter": "none"
             })
         }
-        if (autoSaturate) {
+        if (autoSaturation) {
             $("#saturation").css({
                 "filter": "none"
             })
@@ -229,12 +227,11 @@ function insertMoreBars(data, barsToAdd) {
     return newData;
 }
 
-var setInitialBarCount = false;
 function updateGraph(soundData) {
-    if (!setInitialBarCount && soundData.length > 1) {
-        audioData.labels = genrateLabelList(' ', soundData.length);
-        setInitialBarCount = true;
+    if (flipVis) {
+        soundData = soundData.reverse();
     }
+    audioData.labels = genrateLabelList(' ', soundData.length);
     audioData.datasets[0].data = soundData;
     audioChart.update(1);
 }
@@ -250,20 +247,21 @@ var audioData = {
 };
 var audioChartctx = document.getElementById('audioCanvas').getContext('2d');
 function initAudioChart() {
+    // reset data
+    if (audioChart) {
+        audioChart.destroy();
+    }
+    temporalSmoothedValues = [];
+    soundDataCache = [];
+    audioData.datasets[0].data = [0];
     audioChart = new Chart(audioChartctx, {
-        type: visSelect,
-        data: audioData,
+        type: visSelect, //bar, line, radar, polarArea, doughnut, pie, bubble, scatter
+        data: audioData, 
         options: {
             responsive: true,
             maintainAspectRatio: false,
             legend: {
                 display: false
-            },
-            // don't show the points on the line
-            elements: {
-                point: {
-                    radius: 0
-                }
             },
             scales: {
                 yAxes: [{
@@ -286,6 +284,35 @@ function initAudioChart() {
             }
         }
     });
+    if (visSelect == "line") {
+        audioChart.options.elements.line.tension = 0.3;
+        // remove points on the line
+        audioChart.options.elements.point.radius = 0;
+
+    } else if (visSelect == "radar") {
+        audioChart.options.scale = {
+            ticks: {
+                display: false //this will remove only the labels for radar
+            },
+            angleLines: {
+                display: false //this will remove the radial lines for radar
+            },
+            gridLines: {
+                display: false //this will remove the grid lines for radar
+            }
+        }
+        // use suggestedMin to -1 to make the radar chart start from the center
+        audioChart.options.scale.ticks.suggestedMin = -1;
+        audioChart.options.scale.ticks.suggestedMax = 1;
+        audioChart.options.elements.line.tension = 0.3;
+        // remove points on the line
+        audioChart.options.elements.point.radius = 0;
+
+        // give circle gradient color
+        // give the fill color a gradient
+
+        
+    }
     audioChart.update(1);
 }
 initAudioChart();

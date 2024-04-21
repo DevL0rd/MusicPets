@@ -15,19 +15,8 @@ $(document).ready(function () {
 window.wallpaperPropertyListener = {
     setPaused: function (isPaused) {
         paused = isPaused;
-        if (paused) {
-            try {
-                video.pause();
-            } catch (error) {
-
-            }
-        } else {
+        if (!paused) {
             render();
-            try {
-                video.play();
-            } catch (error) {
-
-            }
         }
     },
     applyGeneralProperties: function (properties) {
@@ -36,6 +25,7 @@ window.wallpaperPropertyListener = {
         }
     },
     applyUserProperties: function (properties) {
+        console.log(properties);
         if (properties.perf_enableFPS) {
             if (properties.perf_enableFPS.value) {
                 //visualizer.settings.fpsEnabled = true;
@@ -117,29 +107,28 @@ window.wallpaperPropertyListener = {
                 })
             }
         }
-        // color theme
-        
-        if (properties.visColor.value) {
-            //Get a rgb string from color value passed by wallpaper-engine
-            var rgbStr = properties.visColor.value.split(' ').map(function (c) {
-                return Math.ceil(c * 255)
-            });
-            audioData.datasets[0].backgroundColor = "rgba(" + rgbStr + ", 0.6)";
-            audioChart.update(0);
-        }
-        if (properties.visRainbow) {
-            visRainbow = properties.visRainbow.value;
-            if (visRainbow) {
-                rainbowLoop();
-            } else {
+        if (properties.schemecolor) {
+            if (properties.schemecolor.value) {
                 //Get a rgb string from color value passed by wallpaper-engine
-                var rgbStr = properties.visColor.value.split(' ').map(function (c) {
+                var rgbStr = properties.schemecolor.value.split(' ').map(function (c) {
                     return Math.ceil(c * 255)
                 });
                 audioData.datasets[0].backgroundColor = "rgba(" + rgbStr + ", 0.6)";
                 audioChart.update(0);
             }
         }
+        if (properties.visRainbow) {
+            visRainbow = properties.visRainbow.value;
+            if (!visRainbow) {
+                //Get a rgb string from color value passed by wallpaper-engine
+                var rgbStr = properties.schemecolor.value.split(' ').map(function (c) {
+                    return Math.ceil(c * 255)
+                });
+                audioData.datasets[0].backgroundColor = "rgba(" + rgbStr + ", 0.6)";
+                audioChart.update(0);
+            }
+        }
+        
         if (properties.soundReaction) {
             soundReaction = properties.soundReaction.value;
             if (!soundReaction) {
@@ -165,6 +154,10 @@ window.wallpaperPropertyListener = {
                 visSelect = properties.visSelect.value;
                 initAudioChart();
             }
+        }
+        // flipVis
+        if (properties.flipVis) {
+            flipVis = properties.flipVis.value;
         }
 
         if (properties.soundVisOffset) {
@@ -273,26 +266,10 @@ window.wallpaperPropertyListener = {
                 addNeko(true);
             }
         }
-        if (properties.tween) {
-            if (properties.tween.value) {
-                tween = 1 - properties.tween.value / 100;
-            }
-        }
-        // sensitivity
-        if (properties.sensitivity) {
-            if (properties.sensitivity.value) {
-                volumeCutoff = 1 - (properties.sensitivity.value / 100);
-            }
-        }
-        if (properties.normalizationSpeed) {
-            if (properties.normalizationSpeed.value) {
-                normalizationSpeed = properties.normalizationSpeed.value / 100;
-            }
-        }
         if (properties.mirroredMode) {
             if (properties.mirroredMode.value) {
                 mirroredMode = properties.mirroredMode.value
-                setInitialBarCount = false;
+                initAudioChart();
             }
         }
 
@@ -328,12 +305,14 @@ function render() {
             }
             fpsThreshold -= 1.0 / settings.fps;
         }
-        // Render the background
-        if (isVideo) {
-            bgCtx.drawImage(video, 0, 0, bgCanvas.width, bgCanvas.height);
-        } else {
-            bgCtx.drawImage(image, 0, 0, bgCanvas.width, bgCanvas.height);
-        }
+        var contentSrc = isVideo ? video : image;
+        var contentWidth = contentSrc.videoWidth || contentSrc.width;
+        var contentHeight = contentSrc.videoHeight || contentSrc.height;
+        // fit screen and maintain aspect ratio
+        var scale = Math.max(bgCanvas.width / contentWidth, bgCanvas.height / contentHeight);
+        var x = (bgCanvas.width / 2 - contentWidth / 2 * scale);
+        var y = (bgCanvas.height / 2 - contentHeight / 2 * scale);
+        bgCtx.drawImage(contentSrc, x, y, contentWidth * scale, contentHeight * scale);
 
         // Render sound stuff
         visualize();
