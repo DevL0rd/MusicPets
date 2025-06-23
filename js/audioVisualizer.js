@@ -34,7 +34,7 @@ function audioListener(soundData) {
         } else {
             soundData = mergeChannels(soundData);
         }
-        
+
         soundData = normlizeWaveform(soundData);
         soundData = processSensitivity(soundData);
         if (!mirroredMode) {
@@ -94,31 +94,31 @@ function react(soundData) {
     if (reactionStrength > 0.1) { //get reactions only in this range
         reactionStrength -= 0.1;
         reactionStrength /= 0.9; //normalize to 0-1
-        
+
         if (useBubbles) {
-            generateBubbles(Math.floor(reactionStrength * 10));
+            generateBubbles(Math.floor(reactionStrength * 15));
         }
         $("#background-canvas").css({
-            "transform": "scale(" + (1 + reactionStrength * 0.5) + ")"
+            "transform": "scale(" + (1 + reactionStrength * 0.2) + ")"
         })
         if (autoBrightness) {
             $("#brightness").css({
-                "filter": "brightness(" + (1 + reactionStrength * 4) + ")"
+                "filter": "brightness(" + (1 + reactionStrength) + ")"
             })
         }
         if (autoContrast) {
             $("#contrast").css({
-                "filter": "contrast(" + (1 + reactionStrength * 2) + ")"
+                "filter": "contrast(" + (1 + reactionStrength) + ")"
             })
         }
         if (autoSaturation) {
             $("#saturation").css({
-                "filter": "saturate(" + ((1 + reactionStrength) * 2) + ")"
+                "filter": "saturate(" + ((1 + reactionStrength)) + ")"
             })
         }
         if (autoGrayscale) {
             $("#grayscale").css({
-                "filter": "grayscale(" + (reactionStrength * 2) + ")"
+                "filter": "grayscale(" + (reactionStrength) + ")"
             })
         }
         if (autoBlur) {
@@ -198,7 +198,7 @@ function processSensitivity(soundData) {
     var firstPass = [];
     for (i in soundData) {
         var dataPoint = soundData[i];
-        firstPass.push(Math.pow(dataPoint, 1.5)); //leaving this 2 for now because looks nice. set larger than 1 to emphasize peaks set smaller fractions to emphasize lower peaks
+        firstPass.push(Math.pow(dataPoint, 1.7)); //leaving this 2 for now because looks nice. set larger than 1 to empharadius peaks set smaller fractions to empharadius lower peaks
     }
     return firstPass;
 }
@@ -270,7 +270,7 @@ function initAudioChart() {
     audioData.datasets[0].data = [0];
     audioChart = new Chart(audioChartctx, {
         type: visSelect, //bar, line, radar, polarArea, doughnut, pie, bubble, scatter
-        data: audioData, 
+        data: audioData,
         options: {
             responsive: true,
             maintainAspectRatio: false,
@@ -325,7 +325,7 @@ function initAudioChart() {
         // give circle gradient color
         // give the fill color a gradient
 
-        
+
     }
     audioChart.update(1);
 }
@@ -354,25 +354,34 @@ class Bubble {
     constructor() {
         this.x = Math.random() * window.innerWidth;
         this.y = window.innerHeight - soundVisOffset;
-        this.size = Math.random() * 10 + 2;
-        this.speed = Math.random() * 5;
+        this.radius = Math.random() * 10 + 2;
+        this.velocity = {
+            x: -((Math.random() * 5) + 4),
+            y: (Math.random() * 4) + 1
+        }
     }
     update() {
-        this.y -= this.speed;
-        if (this.y < 0) {
+        this.y -= this.velocity.y;
+        this.x += this.velocity.x;
+        if ((this.y + this.radius) < 0) {
             this.y = window.innerHeight;
         }
+        if ((this.x + this.radius) < 0) {
+            this.x = window.innerWidth + this.radius;
+        } else if ((this.x - this.radius) > window.innerWidth) {
+            this.x = 0;
+        }
         // shrink the bubble
-        this.size -= 0.03;
+        this.radius -= 0.03;
         // remove bubble if it's too small
-        if (this.size < 0) {
-            this.size = 0;
+        if (this.radius < 0) {
+            this.radius = 0;
         }
     }
     render() {
         animCtx.fillStyle = "rgba(" + r + "," + g + "," + b + ", 0.6)";
         animCtx.beginPath();
-        animCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        animCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         animCtx.fill();
     }
 }
@@ -389,13 +398,13 @@ function renderBubbles() {
 }
 function cleanupBubbles() {
     for (var i = 0; i < bubbles.length; i++) {
-        if (bubbles[i].size <= 0 || bubbles[i].y <= 0){
+        if (bubbles[i].radius <= 0 || bubbles[i].y <= 0) {
             bubbles.splice(i, 1);
         }
     }
 }
 function generateBubbles(count) {
-    
+
     for (var i = 0; i < count; i++) {
         bubbles.push(new Bubble());
     }
