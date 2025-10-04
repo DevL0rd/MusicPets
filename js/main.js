@@ -12,6 +12,13 @@ $(document).ready(function () {
     bgCanvas.height = window.innerHeight; //different from canvas width and height
     render();
 });
+
+$(window).resize(function () {
+    bgCanvas.width = window.innerWidth; //set render width and height
+    bgCanvas.height = window.innerHeight; //different from canvas width and height
+    bubbles = [];
+});
+
 // Read changes made by users
 window.wallpaperPropertyListener = {
     setPaused: function (isPaused) {
